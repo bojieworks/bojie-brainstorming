@@ -22,3 +22,7 @@ npm run dev
 ## 部署（Zeabur）
 
 Postgres 服務一個、Next.js 服務一個。環境變數同 `.env.example`。`SESSION_SECRET` 至少 32 字元。
+
+上傳的圖片存在 `UPLOAD_DIR`（預設 `./data/uploads`）。在 Zeabur 掛一個 Volume 到 `/data/uploads` 並設 `UPLOAD_DIR=/data/uploads`，重新部署才不會掉圖。
+
+Email 通知用 Resend：設 `RESEND_API_KEY`、`NOTIFY_EMAIL`（收件人）、`FROM_EMAIL`（可省略）。沒設就只寫 log。

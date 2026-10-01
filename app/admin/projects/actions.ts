@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { addUpdate, createProject, deleteUpdate, getProjectById, setInterestStatus, setStatus, updateProject } from "@/lib/projects";
 import type { ProjectLink } from "@/lib/db";
+import { saveImage } from "@/lib/uploads";
 
 const schema = z.object({
   title: z.string().trim().min(1, "標題要填"),
@@ -26,6 +27,7 @@ const schema = z.object({
   coverUrl: z.string().trim().default(""),
   groupUrl: z.string().trim().default(""),
   retro: z.string().trim().default(""),
+  retroPhotos: z.string().default("[]"),
   wentWith: z.string().trim().default(""),
 });
 
@@ -41,6 +43,15 @@ function parseLinks(raw: string): ProjectLink[] {
       if (m) return { label: m[1].trim() || m[2], url: m[2] };
       return { label: l, url: l };
     });
+}
+
+function parsePhotos(raw: string): string[] {
+  try {
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr.filter((x): x is string => typeof x === "string" && x.startsWith("/uploads/")) : [];
+  } catch {
+    return [];
+  }
 }
 
 function read(formData: FormData) {
@@ -66,6 +77,7 @@ function read(formData: FormData) {
     coverUrl: s("coverUrl"),
     groupUrl: s("groupUrl"),
     retro: s("retro"),
+    retroPhotos: s("retroPhotos") || "[]",
     wentWith: s("wentWith"),
   });
 }
@@ -73,11 +85,12 @@ function read(formData: FormData) {
 export async function saveProject(id: number | null, _prev: SaveState, formData: FormData): Promise<SaveState> {
   const parsed = read(formData);
   if (!parsed.success) return { message: parsed.error.issues[0]?.message ?? "有欄位不對" };
-  const { links, status, ...rest } = parsed.data;
+  const { links, status, retroPhotos, ...rest } = parsed.data;
   const data = {
     ...rest,
     links: parseLinks(links),
     coverUrl: rest.coverUrl || null,
+    retroPhotos: parsePhotos(retroPhotos),
   };
 
   if (id === null) {
@@ -99,9 +112,12 @@ export async function saveProject(id: number | null, _prev: SaveState, formData:
 }
 
 export async function postUpdate(projectId: number, formData: FormData) {
-  const body = String(formData.get("body") ?? "").trim();
-  if (!body) return;
-  await addUpdate(projectId, body);
+  const body = String(formData.get("body") ?? "").replace(/\r\n/g, "\n").trim();
+  const photo = formData.get("photo");
+  if (!body && !(photo instanceof File && photo.size > 0)) return;
+  let photoUrl: string | null = null;
+  if (photo instanceof File && photo.size > 0) photoUrl = (await saveImage(photo)).url;
+  await addUpdate(projectId, body || "（照片）", photoUrl);
   const p = await getProjectById(projectId);
   revalidatePath(`/admin/projects/${projectId}`);
   if (p) revalidatePath(`/p/${p.slug}`);

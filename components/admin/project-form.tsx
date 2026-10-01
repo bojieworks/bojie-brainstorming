@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import type { Project } from "@/lib/db";
 import { CATEGORY, EFFORT, SIZE, STATUS, type StatusKey } from "@/lib/labels";
 import { saveProject, type SaveState } from "@/app/admin/projects/actions";
+import { ImageField, PhotosField } from "./image-field";
 
 type Props = { project: Project | null };
 
@@ -43,6 +44,7 @@ export function ProjectForm({ project }: Props) {
           <label htmlFor="retro">回顧 <small>怎麼樣、好不好玩、下次要改什麼</small></label>
           <textarea className="input" id="retro" name="retro" defaultValue={project?.retro ?? ""} />
         </div>
+        <PhotosField name="retroPhotos" label="照片" hint="第一張會當封面，可以多張" initial={project?.retroPhotos ?? []} />
         <div className="row">
           <label htmlFor="wentWith">一起去的人 <small>用頓號分開</small></label>
           <input className="input" id="wentWith" name="wentWith" defaultValue={project?.wentWith ?? ""} />
@@ -121,10 +123,7 @@ export function ProjectForm({ project }: Props) {
         <label htmlFor="links">參考連結 <small>一行一個，「名稱 網址」</small></label>
         <textarea className="input" id="links" name="links" style={{ minHeight: 64 }} placeholder={"路線紀錄 https://…"} defaultValue={linksText} />
       </div>
-      <div className="row">
-        <label htmlFor="coverUrl">封面圖網址 <small>沒有就用 emoji</small></label>
-        <input className="input" id="coverUrl" name="coverUrl" type="url" defaultValue={project?.coverUrl ?? ""} />
-      </div>
+      <ImageField name="coverUrl" label="封面圖" hint="沒有就用 emoji" initial={project?.coverUrl ?? ""} />
       <div className="row">
         <label htmlFor="groupUrl">群組連結 <small>只有你看得到，前台不顯示</small></label>
         <input className="input" id="groupUrl" name="groupUrl" placeholder="LINE 群邀請連結" defaultValue={project?.groupUrl ?? ""} />

@@ -60,6 +60,12 @@ export default async function ProjectPage(props: PageProps<"/p/[slug]">) {
               <div>
                 {u.kind === "system" ? <span className="sys">{first}</span> : first}
                 {rest.length > 0 && <><br />{rest.join(" ")}</>}
+                {u.photoUrl && (
+                  <div className="tl-photo">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={u.photoUrl} alt="" loading="lazy" />
+                  </div>
+                )}
               </div>
             </li>
           );
