@@ -128,7 +128,7 @@ export default async function ProjectPage(props: PageProps<"/p/[slug]">) {
           )}
           <Timeline title="從想法到做完" />
           {count > 0 && (
-            <div className="who" style={{ marginTop: -8 }}>
+            <div className="who" style={{ marginTop: 16 }}>
               <People count={count} size="lg" faded />
               <span className="count muted">當時 {count} 人說想一起</span>
             </div>
