@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>小美 · 後台</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap admin">
+  <header class="top">
+    <a class="brand back" href="admin.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      後台
+    </a>
+    <nav><a href="card.html">看她的卡 ↗</a></nav>
+  </header>
+  <nav class="admin-nav">
+    <a href="admin.html">待辦 <span class="n">4</span></a>
+    <a href="admin.html#projects">企劃</a>
+    <a href="admin-friend.html" aria-current="page">朋友</a>
+    <a href="#">券菜單</a>
+  </nav>
+
+  <h1 class="h2">小美</h1>
+  <p class="muted" style="margin:0 0 20px;font-size:14px">建立於 2024.12 · 4 章 · 1 張券待兌現</p>
+
+  <div class="grid2">
+    <div>
+      <section class="section" style="padding-top:0">
+        <p class="label" style="padding-top:0">她的集章卡連結 <small class="muted">用 LINE 丟給她，不要公開</small></p>
+        <div class="linkbox">
+          <code>https://idea.example.tw/card/8f3k2q</code>
+          <button class="btn secondary" type="button" id="copy-link">複製</button>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="label">章 · 4</p>
+        <div class="stamp-grid sm">
+          <a class="stamp" href="#"><span class="e">🏝️</span><span class="d">2025.08</span></a>
+          <a class="stamp" href="#"><span class="e">🧑‍🍳</span><span class="d">2025.02</span></a>
+          <a class="stamp" href="#"><span class="e">🖼️</span><span class="d">2024.12</span></a>
+          <a class="stamp" href="#"><span class="e">🧗</span><span class="d">2025.09</span></a>
+          <span class="stamp empty"><span class="n">5</span></span>
+          <span class="stamp empty"><span class="n">6</span></span>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="label">手動蓋一章 <small class="muted">長期企劃的里程碑用</small></p>
+        <form class="form">
+          <div class="two">
+            <div class="row">
+              <label for="sp">企劃 <small>可不選</small></label>
+              <select class="input" id="sp"><option>每週三去攀岩</option><option>做 Podcast</option><option>不屬於任何企劃</option></select>
+            </div>
+            <div class="row">
+              <label for="sd">日期</label>
+              <input class="input" id="sd" type="date" value="2025-09-24">
+            </div>
+          </div>
+          <div class="row">
+            <label for="sl">理由 <small>她會在卡上看到</small></label>
+            <input class="input" id="sl" placeholder="連續來四週">
+          </div>
+          <div><button class="btn primary" type="button" style="width:auto;height:44px">蓋章</button></div>
+        </form>
+      </section>
+    </div>
+
+    <aside class="side">
+      <section class="section" style="padding-top:0">
+        <p class="label" style="padding-top:0">券</p>
+        <div class="coupon pending"><div><div class="name">小傑券 · 請你一杯飲料</div><div class="from">第 1–3 章 · 今天申請</div></div><button class="mini-btn" type="button">已兌現</button></div>
+        <div class="coupon locked" style="margin-top:10px"><div><div class="name">下一張</div></div><span class="state">還差 2 章</span></div>
+      </section>
+
+      <section class="section">
+        <p class="label">她表態過的</p>
+        <ul class="timeline">
+          <li><time>09.20</time><div>🏔️ 爬大縱走 · 認真的</div></li>
+          <li><time>08.02</time><div>🍜 吃遍台北的拉麵 · 先聊聊</div></li>
+          <li><time>05.11</time><div>🏝️ 去蘭嶼待一週 · 認真的 · 有去</div></li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

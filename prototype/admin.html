@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>後台 · 小傑想做的事</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap admin">
+  <header class="top">
+    <a class="brand" href="admin.html">小傑想做的事 <small>後台</small></a>
+    <nav><a href="index.html">看前台 ↗</a></nav>
+  </header>
+  <nav class="admin-nav">
+    <a href="admin.html" aria-current="page">待辦 <span class="n">4</span></a>
+    <a href="admin.html#projects">企劃</a>
+    <a href="admin-friend.html">朋友</a>
+    <a href="#">券菜單</a>
+  </nav>
+
+  <section class="section">
+    <p class="label">還沒聯絡的人</p>
+    <ul class="todo" id="todo">
+      <li>
+        <button class="check" aria-pressed="false" aria-label="標記已聯絡"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg></button>
+        <div>
+          <span class="who"><b>小花</b> 想一起 <a href="admin-project.html">爬大縱走</a><span class="tag serious">認真的</span></span>
+          <p class="note">「10 月前兩週都可以，我有帳篷」</p>
+          <div class="meta">2 小時前 · 有集章卡 · 公開名字</div>
+        </div>
+        <button class="mini-btn danger">不是朋友</button>
+      </li>
+      <li>
+        <button class="check" aria-pressed="false" aria-label="標記已聯絡"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg></button>
+        <div>
+          <span class="who"><b>Kevin</b> 想一起 <a href="#">吃遍台北的拉麵</a><span class="tag">先聊聊</span></span>
+          <div class="meta">昨天 · 聯絡方式：IG @kevin.eats</div>
+        </div>
+        <button class="mini-btn danger">不是朋友</button>
+      </li>
+      <li>
+        <button class="check" aria-pressed="false" aria-label="標記已聯絡"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg></button>
+        <div>
+          <span class="who"><b>阿明</b> 想一起 <a href="#">環島</a><span class="tag serious">認真的</span></span>
+          <p class="note">「明年春天我剛好離職」</p>
+          <div class="meta">3 天前</div>
+        </div>
+        <button class="mini-btn danger">不是朋友</button>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <p class="label">等兌現的券</p>
+    <ul class="todo">
+      <li>
+        <button class="check" aria-pressed="false" aria-label="標記已兌現"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg></button>
+        <div>
+          <span class="who"><b>小美</b> 想換 <b>請你一杯飲料</b></span>
+          <div class="meta">今天 · 第 1–3 章的券 · <a href="admin-friend.html">看她的卡</a></div>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="projects">
+    <p class="label">企劃 · 14</p>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <a class="btn primary" href="admin-project.html" style="width:auto;height:40px">＋ 寫下一個想法</a>
+    </div>
+    <ul class="ptable">
+      <li><span class="e">🏔️</span><a href="admin-project.html">爬大縱走</a><span class="st">籌備中</span><span class="ppl">6 人</span></li>
+      <li><span class="e">🧗</span><a href="#">每週三去攀岩</a><span class="st">進行中</span><span class="ppl">8 人</span></li>
+      <li><span class="e">🎙️</span><a href="#">做 Podcast</a><span class="st">想法</span><span class="ppl">2 人</span></li>
+      <li><span class="e">✈️</span><a href="#">去一個沒去過的縣市</a><span class="st">想法</span><span class="ppl">2 人</span></li>
+      <li><span class="e">🏕️</span><a href="#">秋天去露營</a><span class="st">想法</span><span class="ppl">4 人</span></li>
+      <li><span class="e">🚗</span><a href="#">環島</a><span class="st">想法</span><span class="ppl">7 人</span></li>
+      <li><span class="e">🍜</span><a href="#">吃遍台北的拉麵</a><span class="st">想法</span><span class="ppl">5 人</span></li>
+      <li class="draft"><span class="e">🎹</span><a href="#">學一首鋼琴曲（草稿）</a><span class="st">未發布</span><span class="ppl"></span></li>
+      <li><span class="e">🎪</span><a href="#">去年的音樂祭</a><span class="st">擱置</span><span class="ppl">1 人</span></li>
+      <li><span class="e">🏝️</span><a href="#">去蘭嶼待一週</a><span class="st">做完了</span><span class="ppl">7 人</span></li>
+    </ul>
+  </section>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

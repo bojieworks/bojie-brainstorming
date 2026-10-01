@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>編輯：爬大縱走 · 後台</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap admin">
+  <header class="top">
+    <a class="brand back" href="admin.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      後台
+    </a>
+    <nav><a href="project.html">看這頁前台 ↗</a></nav>
+  </header>
+
+  <h1 class="h2">🏔️ 爬大縱走</h1>
+  <p class="muted" style="margin:0 0 20px;font-size:14px">建立於 09.14 · 最後動靜 10.02</p>
+
+  <div class="grid2">
+    <form class="form" id="pform">
+      <div class="row">
+        <span class="lbl">狀態</span>
+        <div class="pills status" id="status">
+          <label><input type="radio" name="status" value="idea"><span>💭 想法</span></label>
+          <label><input type="radio" name="status" value="forming" checked><span>🙌 籌備中</span></label>
+          <label><input type="radio" name="status" value="active"><span>🚀 進行中</span></label>
+          <label><input type="radio" name="status" value="done"><span>✅ 做完了</span></label>
+          <label><input type="radio" name="status" value="parked"><span>💤 擱置</span></label>
+        </div>
+        <p class="hint">改狀態會自動在前台更新紀錄加一則，例如「開始籌備了」。</p>
+      </div>
+
+      <div class="row inline">
+        <label class="toggle" style="margin:0"><input type="checkbox" checked><i></i>開放加入</label>
+        <label class="toggle" style="margin:0"><input type="checkbox" checked><i></i>已發布</label>
+      </div>
+
+      <div class="done-fields hidden" id="done-fields">
+        <span class="lbl">做完了，補一下回顧</span>
+        <div class="row">
+          <label for="retro">回顧 <small>怎麼樣、好不好玩、下次要改什麼</small></label>
+          <textarea class="input" id="retro"></textarea>
+        </div>
+        <div class="row">
+          <span class="lbl">照片</span>
+          <div class="cover"><div class="ph">＋</div><span class="hint">放一張會更像真的。可以多張。</span></div>
+        </div>
+        <div class="row">
+          <span class="lbl">一起去的人 <small>勾到的人會各蓋一章</small></span>
+          <div class="pills friend-pick">
+            <label><input type="checkbox" checked><span>小美</span></label>
+            <label><input type="checkbox" checked><span>阿哲</span></label>
+            <label><input type="checkbox"><span>小花</span></label>
+            <label><input type="checkbox"><span>阿明</span></label>
+            <label><input type="checkbox"><span>Kevin</span></label>
+          </div>
+          <input class="input" placeholder="沒有集章卡的人，用頓號分開">
+        </div>
+      </div>
+
+      <div class="two">
+        <div class="row">
+          <label for="emoji">Emoji</label>
+          <input class="input" id="emoji" value="🏔️">
+        </div>
+        <div class="row">
+          <label for="cat">分類</label>
+          <select class="input" id="cat">
+            <option selected>戶外</option><option>旅行</option><option>創作</option><option>學習</option><option>專案</option><option>生活</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <label for="title">標題</label>
+        <input class="input" id="title" value="爬大縱走">
+      </div>
+      <div class="row">
+        <label for="tagline">一句話 <small>20 字內，卡片上會看到</small></label>
+        <input class="input" id="tagline" value="三天兩夜，從北到南慢慢走，不趕路">
+      </div>
+      <div class="row">
+        <label for="why">為什麼想做 <small>用你平常說話的方式</small></label>
+        <textarea class="input" id="why" style="min-height:140px">去年看完別人的紀錄片就一直放在心裡。不想走很快，想一路停下來拍照、煮東西、聊天，走到哪算到哪。
+
+一個人走太安靜了，而且我煮的東西需要有人幫忙吃。</textarea>
+      </div>
+
+      <div class="row">
+        <span class="lbl">投入程度</span>
+        <div class="pills">
+          <label><input type="radio" name="effort"><span>一個下午</span></label>
+          <label><input type="radio" name="effort"><span>一個週末</span></label>
+          <label><input type="radio" name="effort" checked><span>一週以上</span></label>
+          <label><input type="radio" name="effort"><span>長期</span></label>
+        </div>
+      </div>
+      <div class="two">
+        <div class="row">
+          <label for="when">時間感 <small>可以很模糊</small></label>
+          <input class="input" id="when" value="10 月">
+        </div>
+        <div class="row">
+          <label for="size">想找幾人</label>
+          <select class="input" id="size"><option>找 1~2 人</option><option selected>找 3~5 人</option><option>越多越好</option></select>
+        </div>
+      </div>
+      <div class="two">
+        <div class="row">
+          <label for="d1">確定日期 <small>有了才填</small></label>
+          <input class="input" id="d1" type="date">
+        </div>
+        <div class="row">
+          <label for="d2">到</label>
+          <input class="input" id="d2" type="date">
+        </div>
+      </div>
+      <div class="row">
+        <label for="loc">地點</label>
+        <input class="input" id="loc" value="能高越嶺到奇萊南華，看天氣調整">
+      </div>
+      <div class="row">
+        <label for="fit">適合什麼樣的人</label>
+        <textarea class="input" id="fit">體力普通就好，重點是不趕時間、可以接受三天不洗澡。</textarea>
+      </div>
+      <div class="row">
+        <label for="links">參考連結 <small>一行一個</small></label>
+        <textarea class="input" id="links" style="min-height:64px">路線紀錄 https://…
+裝備清單 https://…</textarea>
+      </div>
+      <div class="row">
+        <span class="lbl">封面圖 <small>沒有就用 emoji</small></span>
+        <div class="cover"><div class="ph">＋</div><button type="button" class="mini-btn">上傳</button></div>
+      </div>
+      <div class="row">
+        <label for="group">群組連結 <small>只有你看得到，前台不顯示</small></label>
+        <input class="input" id="group" placeholder="LINE 群邀請連結">
+      </div>
+
+      <div class="bar">
+        <button class="btn primary" type="button" id="save">儲存</button>
+        <span class="saved" id="saved"></span>
+        <span class="spacer"></span>
+        <button class="mini-btn" type="button">複製前台連結</button>
+      </div>
+    </form>
+
+    <aside class="side">
+      <section class="section" style="padding-top:0">
+        <p class="label" style="padding-top:0">發一則更新</p>
+        <div class="updates-admin">
+          <textarea class="input" placeholder="先把 10 月的週末都問一遍，再決定哪三天。"></textarea>
+          <div class="send">
+            <button class="btn secondary" type="button">＋ 圖</button>
+            <button class="btn primary" type="button">發布</button>
+          </div>
+        </div>
+        <ul class="timeline" style="margin-top:12px">
+          <li><time>10.02</time><div><span class="sys">開始籌備了</span><br>先把 10 月的週末都問一遍，再決定哪三天。</div></li>
+          <li><time>09.27</time><div>有六個人說想去了，比我想的多。</div></li>
+          <li><time>09.14</time><div><span class="sys">小傑把這個想法寫下來</span></div></li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <p class="label">想一起的人 · 6</p>
+        <ul class="todo">
+          <li>
+            <button class="check" aria-pressed="false" aria-label="已聯絡"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg></button>
+            <div><span class="who"><b>小花</b><span class="tag serious">認真的</span></span><p class="note">「10 月前兩週都可以，我有帳篷」</p><div class="meta">2 小時前 · 公開名字</div></div>
+          </li>
+          <li class="done-row">
+            <button class="check" aria-pressed="true" aria-label="已聯絡"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg></button>
+            <div><span class="who"><b>小美</b><span class="tag serious">認真的</span></span><div class="meta">09.20 · 公開名字 · 有集章卡</div></div>
+          </li>
+          <li class="done-row">
+            <button class="check" aria-pressed="true" aria-label="已聯絡"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg></button>
+            <div><span class="who"><b>阿哲</b><span class="tag serious">認真的</span></span><div class="meta">09.18 · 公開名字</div></div>
+          </li>
+          <li class="done-row">
+            <button class="check" aria-pressed="true" aria-label="已聯絡"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg></button>
+            <div><span class="who"><b>阿明</b><span class="tag">先聊聊</span></span><div class="meta">09.16</div></div>
+          </li>
+          <li class="done-row">
+            <button class="check" aria-pressed="true" aria-label="已聯絡"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg></button>
+            <div><span class="who"><b>Jenny</b><span class="tag">先聊聊</span></span><div class="meta">09.15 · 聯絡方式：LINE jenny_c</div></div>
+          </li>
+          <li class="done-row">
+            <button class="check" aria-pressed="true" aria-label="已聯絡"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg></button>
+            <div><span class="who"><b>老王</b><span class="tag">先聊聊</span></span><div class="meta">09.14</div></div>
+          </li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
