@@ -44,7 +44,7 @@ function parseLinks(raw: string): ProjectLink[] {
 }
 
 function read(formData: FormData) {
-  const s = (k: string) => String(formData.get(k) ?? "");
+  const s = (k: string) => String(formData.get(k) ?? "").replace(/\r\n/g, "\n");
   const opt = (k: string) => (s(k) ? s(k) : null);
   return schema.safeParse({
     title: s("title"),
