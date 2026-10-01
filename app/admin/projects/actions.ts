@@ -6,6 +6,9 @@ import { z } from "zod";
 import { addUpdate, createProject, deleteUpdate, getProjectById, setInterestStatus, setStatus, updateProject } from "@/lib/projects";
 import type { ProjectLink } from "@/lib/db";
 import { saveImage } from "@/lib/uploads";
+import { stampForProject } from "@/lib/friends";
+import { eq } from "drizzle-orm";
+import { db, projects } from "@/lib/db";
 
 const schema = z.object({
   title: z.string().trim().min(1, "標題要填"),
@@ -105,6 +108,10 @@ export async function saveProject(id: number | null, _prev: SaveState, formData:
   if (!current) return { message: "找不到這個企劃" };
   await updateProject(id, data);
   if (current.status !== status) await setStatus(id, status);
+  if (status === "done") {
+    const ids = formData.getAll("stampFriends").map(Number).filter((n) => Number.isInteger(n) && n > 0);
+    await stampForProject(ids, { id, title: data.title, emoji: data.emoji, endDate: data.endDate });
+  }
   revalidatePath("/");
   revalidatePath(`/p/${current.slug}`);
   revalidatePath(`/admin/projects/${id}`);
@@ -133,4 +140,12 @@ export async function markInterest(projectId: number, interestId: number, status
   await setInterestStatus(interestId, status);
   revalidatePath(`/admin/projects/${projectId}`);
   revalidatePath("/admin");
+}
+
+export async function deleteProject(id: number) {
+  await db.delete(projects).where(eq(projects.id, id));
+  revalidatePath("/");
+  revalidatePath("/admin");
+  revalidatePath("/admin/projects");
+  redirect("/admin/projects");
 }

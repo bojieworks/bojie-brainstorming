@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 const items = [
   { href: "/admin", label: "待辦", exact: true },
   { href: "/admin/projects", label: "企劃" },
+  { href: "/admin/friends", label: "朋友" },
+  { href: "/admin/rewards", label: "券菜單" },
 ];
 
 export function AdminNav() {

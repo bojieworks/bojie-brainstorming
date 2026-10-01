@@ -3,13 +3,15 @@
 import { useActionState, useState } from "react";
 import type { Project } from "@/lib/db";
 import { CATEGORY, EFFORT, SIZE, STATUS, type StatusKey } from "@/lib/labels";
-import { saveProject, type SaveState } from "@/app/admin/projects/actions";
+import { deleteProject, saveProject, type SaveState } from "@/app/admin/projects/actions";
 import { ImageField, PhotosField } from "./image-field";
 
-type Props = { project: Project | null };
+type FriendOpt = { id: number; name: string; stamped: boolean };
+type Props = { project: Project | null; friends?: FriendOpt[] };
 
-export function ProjectForm({ project }: Props) {
+export function ProjectForm({ project, friends = [] }: Props) {
   const bound = saveProject.bind(null, project?.id ?? null);
+  const removeAction = project ? deleteProject.bind(null, project.id) : undefined;
   const [state, action, pending] = useActionState<SaveState, FormData>(bound, { message: "" });
   const [status, setStatus] = useState<StatusKey>(project?.status ?? "idea");
   const linksText = (project?.links ?? []).map((l) => `${l.label} ${l.url}`).join("\n");
@@ -46,8 +48,20 @@ export function ProjectForm({ project }: Props) {
         </div>
         <PhotosField name="retroPhotos" label="照片" hint="第一張會當封面，可以多張" initial={project?.retroPhotos ?? []} />
         <div className="row">
-          <label htmlFor="wentWith">一起去的人 <small>用頓號分開</small></label>
-          <input className="input" id="wentWith" name="wentWith" defaultValue={project?.wentWith ?? ""} />
+          <span className="lbl">一起去的人 <small>勾到的人會各蓋一章</small></span>
+          {friends.length > 0 ? (
+            <div className="pills friend-pick">
+              {friends.map((f) => (
+                <label key={f.id}>
+                  <input type="checkbox" name="stampFriends" value={f.id} defaultChecked={f.stamped} />
+                  <span>{f.name}{f.stamped ? " ✓" : ""}</span>
+                </label>
+              ))}
+            </div>
+          ) : (
+            <p className="hint">還沒有建任何朋友，先去「朋友」建人，才能蓋章。</p>
+          )}
+          <input className="input" id="wentWith" name="wentWith" placeholder="沒有集章卡的人，用頓號分開" defaultValue={project?.wentWith ?? ""} />
         </div>
       </div>
 
@@ -136,7 +150,10 @@ export function ProjectForm({ project }: Props) {
         </span>
         <span className="spacer" />
         {project && (
-          <a className="mini-btn" href={`/p/${project.slug}`} target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center" }}>看前台 ↗</a>
+          <>
+            <button type="submit" formAction={removeAction} className="mini-btn danger" onClick={(e) => { if (!confirm("刪掉這個企劃？表態和更新會一起消失。")) e.preventDefault(); }}>刪除</button>
+            <a className="mini-btn" href={`/p/${project.slug}`} target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center" }}>看前台 ↗</a>
+          </>
         )}
       </div>
     </form>
