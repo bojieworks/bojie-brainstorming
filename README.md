@@ -21,8 +21,21 @@ npm run dev
 
 ## 部署（Zeabur）
 
-Postgres 服務一個、Next.js 服務一個。環境變數同 `.env.example`。`SESSION_SECRET` 至少 32 字元。
+1. Zeabur 建專案，加一個 **PostgreSQL** 服務。
+2. 再加一個 **Git** 服務，連這個 repo。Zeabur 會自動偵測 Next.js。
+3. 在 Next.js 服務的 Volumes 掛一個 volume 到 `/data/uploads`。
+4. 環境變數：
 
-上傳的圖片存在 `UPLOAD_DIR`（預設 `./data/uploads`）。在 Zeabur 掛一個 Volume 到 `/data/uploads` 並設 `UPLOAD_DIR=/data/uploads`，重新部署才不會掉圖。
+| 變數 | 值 |
+|---|---|
+| `DATABASE_URL` | 從 PostgreSQL 服務複製連線字串 |
+| `ADMIN_PASSWORD` | 後台密碼 |
+| `SESSION_SECRET` | 隨機 32 字元以上 |
+| `SITE_URL` | 正式網址，例如 `https://idea.example.tw` |
+| `UPLOAD_DIR` | `/data/uploads` |
+| `RESEND_API_KEY` | Resend 的 key |
+| `NOTIFY_EMAIL` | 收通知的信箱 |
+| `FROM_EMAIL` | 可省略，預設用 Resend 測試寄件者 |
 
-Email 通知用 Resend：設 `RESEND_API_KEY`、`NOTIFY_EMAIL`（收件人）、`FROM_EMAIL`（可省略）。沒設就只寫 log。
+5. 部署。啟動指令 `npm start` 會先跑 migration 再啟動。
+6. 綁網域，把 `SITE_URL` 改成正式網址後重新部署一次。
