@@ -226,7 +226,7 @@ img { display: block; max-width: 100%; }
 @media (min-width: 768px) { .detail .main { max-width: var(--read); margin: 0 auto; } }
 @media (min-width: 960px) {
   .detail .grid { display: grid; grid-template-columns: var(--read) 300px; gap: 48px; justify-content: space-between; }
-  .detail .main { margin: 0; }
+  .detail .grid .main { margin: 0; }
   .detail .aside { position: sticky; top: 24px; align-self: start; }
   .detail .aside .specs { margin-top: 0; grid-template-columns: 1fr; }
   .detail .aside .specs div + div { border-left: 0; border-top: 1px solid var(--line); }
