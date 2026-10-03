@@ -15,7 +15,6 @@ import { relations } from "drizzle-orm";
 
 export const statusEnum = pgEnum("status", ["idea", "forming", "active", "done", "parked"]);
 export const effortEnum = pgEnum("effort", ["afternoon", "weekend", "week_plus", "ongoing"]);
-export const sizeEnum = pgEnum("ideal_size", ["one_two", "three_five", "many"]);
 export const levelEnum = pgEnum("interest_level", ["curious", "serious"]);
 export const interestStatusEnum = pgEnum("interest_status", ["new", "contacted", "spam"]);
 export const updateKindEnum = pgEnum("update_kind", ["manual", "system"]);
@@ -52,7 +51,7 @@ export const projects = pgTable(
     startDate: date("start_date"),
     endDate: date("end_date"),
     location: text("location").notNull().default(""),
-    idealSize: sizeEnum("ideal_size"),
+    idealSize: text("ideal_size"),
     fitFor: text("fit_for").notNull().default(""),
     coverUrl: text("cover_url"),
     links: jsonb("links").$type<ProjectLink[]>().notNull().default([]),

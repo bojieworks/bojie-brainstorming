@@ -1,11 +1,11 @@
 import Link from "next/link";
 import type { ProjectWithCount } from "@/lib/projects";
-import { EFFORT, SIZE } from "@/lib/labels";
+import { EFFORT, sizeLabel } from "@/lib/labels";
 import { People } from "./people";
 import { StatusStamp } from "./status-stamp";
 
 export function ProjectCard({ p, color, index = 0 }: { p: ProjectWithCount; color: string; index?: number }) {
-  const specs = [EFFORT[p.effort], p.timeHint, p.idealSize ? SIZE[p.idealSize] : ""].filter(Boolean);
+  const specs = [EFFORT[p.effort], p.timeHint, sizeLabel(p.idealSize)].filter(Boolean);
   return (
     <Link
       className="card"

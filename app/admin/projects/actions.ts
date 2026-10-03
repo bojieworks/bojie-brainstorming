@@ -22,7 +22,7 @@ const schema = z.object({
   published: z.boolean(),
   effort: z.enum(["afternoon", "weekend", "week_plus", "ongoing"]),
   timeHint: z.string().trim().default(""),
-  idealSize: z.enum(["one_two", "three_five", "many"]).nullable(),
+  idealSize: z.enum(["one_two", "three_five", "six_ten"]).nullable(),
   startDate: z.string().nullable(),
   endDate: z.string().nullable(),
   location: z.string().trim().default(""),

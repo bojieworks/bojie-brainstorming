@@ -16,7 +16,7 @@ export const EFFORT = {
 export const SIZE = {
   one_two: "找 1~2 人",
   three_five: "找 3~5 人",
-  many: "越多越好",
+  six_ten: "找 6~10 人",
 } as const;
 
 export const LEVEL = { curious: "先聊聊", serious: "認真的" } as const;
@@ -24,3 +24,4 @@ export const LEVEL = { curious: "先聊聊", serious: "認真的" } as const;
 export type StatusKey = keyof typeof STATUS;
 export type EffortKey = keyof typeof EFFORT;
 export type SizeKey = keyof typeof SIZE;
+export const sizeLabel = (k: string | null | undefined) => (k && k in SIZE ? SIZE[k as SizeKey] : "");

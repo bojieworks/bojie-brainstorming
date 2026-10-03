@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getProjectBySlug, listUpdates } from "@/lib/projects";
 import { countInterests, publicNames } from "@/lib/interests";
-import { EFFORT, SIZE } from "@/lib/labels";
+import { EFFORT, sizeLabel } from "@/lib/labels";
 import { monthDay, yearMonth } from "@/lib/format";
 import { StatusStamp } from "@/components/public/status-stamp";
 import { People } from "@/components/public/people";
@@ -37,7 +37,7 @@ export default async function ProjectPage(props: PageProps<"/p/[slug]">) {
   const specs = [
     { k: "投入", v: EFFORT[p.effort] },
     { k: "時間", v: p.startDate ? `${monthDay(p.startDate)}${p.endDate && p.endDate !== p.startDate ? ` – ${monthDay(p.endDate)}` : ""}` : p.timeHint || "還沒定" },
-    { k: "人數", v: p.idealSize ? SIZE[p.idealSize] : "不限" },
+    { k: "人數", v: sizeLabel(p.idealSize) || "不限" },
   ];
   const siteUrl = `${process.env.SITE_URL ?? ""}/p/${p.slug}`;
   const shownUpdates = updates;
