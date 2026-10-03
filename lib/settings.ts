@@ -39,10 +39,17 @@ export async function setSetting(key: string, value: string) {
 export type AboutBlock = { type: "heading"; text: string } | { type: "paragraph"; text: string };
 
 export function parseAbout(raw: string): AboutBlock[] {
-  return raw
-    .replace(/\r\n/g, "\n")
-    .split(/\n\s*\n/)
-    .map((b) => b.trim())
-    .filter(Boolean)
-    .map((b) => (b.startsWith("## ") ? { type: "heading", text: b.slice(3).trim() } : { type: "paragraph", text: b }));
+  const blocks: AboutBlock[] = [];
+  for (const chunk of raw.replace(/\r\n/g, "\n").split(/\n\s*\n/)) {
+    let body = chunk.trim();
+    if (!body) continue;
+    if (body.startsWith("## ")) {
+      const [first, ...rest] = body.split("\n");
+      blocks.push({ type: "heading", text: first.slice(3).trim() });
+      body = rest.join("\n").trim();
+      if (!body) continue;
+    }
+    blocks.push({ type: "paragraph", text: body });
+  }
+  return blocks;
 }
