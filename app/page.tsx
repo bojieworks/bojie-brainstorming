@@ -55,7 +55,7 @@ export default async function Home(props: PageProps<"/">) {
       <section className="section" id="done">
         <p className="label">一起做過的</p>
         {done.length === 0 ? (
-          <p className="empty-line">還沒一起做過什麼。正在等第一件。</p>
+          <p className="empty-line">正在等第一件。</p>
         ) : (
           <>
             <div className="done-grid">
