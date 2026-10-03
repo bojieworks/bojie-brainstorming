@@ -81,6 +81,7 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
     document.addEventListener("keydown", onKey);
     const t = setTimeout(() => {
+      if (!matchMedia("(hover: hover)").matches) return;
       const target = sheetRef.current?.querySelector<HTMLElement>(me.name ? 'input[name="level"]' : "#name");
       target?.focus();
     }, 260);

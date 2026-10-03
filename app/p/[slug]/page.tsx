@@ -19,6 +19,11 @@ export async function generateMetadata(props: PageProps<"/p/[slug]">): Promise<M
 
 const paragraphs = (t: string) => t.replace(/\r\n/g, "\n").split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean);
 
+function linkLabel(l: { label: string; url: string }) {
+  if (l.label && l.label !== l.url && !/^https?:\/\//.test(l.label)) return l.label;
+  try { return new URL(l.url).hostname.replace(/^www\./, ""); } catch { return l.url; }
+}
+
 function calendarUrl(title: string, start: string, end: string | null, location: string, url: string) {
   const d = (s: string) => s.replaceAll("-", "");
   const endDate = new Date(end ?? start);
@@ -86,7 +91,7 @@ export default async function ProjectPage(props: PageProps<"/p/[slug]">) {
       <dl className="kv">
         {p.location && <><dt>地點</dt><dd>{p.location}</dd></>}
         {p.links.length > 0 && (
-          <><dt>參考</dt><dd>{p.links.map((l) => <a key={l.url} href={l.url} target="_blank" rel="noreferrer">{l.label} ↗</a>)}</dd></>
+          <><dt>參考</dt><dd>{p.links.map((l) => <a key={l.url} href={l.url} target="_blank" rel="noreferrer">{linkLabel(l)} ↗</a>)}</dd></>
         )}
         {p.startDate && !isDone && (
           <><dt>日曆</dt><dd><a href={calendarUrl(p.title, p.startDate, p.endDate, p.location, siteUrl)} target="_blank" rel="noreferrer">加入 Google 日曆 ↗</a></dd></>
@@ -175,8 +180,6 @@ export default async function ProjectPage(props: PageProps<"/p/[slug]">) {
             )}
             <Details />
             <Timeline title="更新" />
-
-            <div className="mobile-only"><JoinButton /></div>
 
             <div className="share">
               <p>把這個丟給可能也想去的朋友</p>
