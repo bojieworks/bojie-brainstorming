@@ -8,7 +8,7 @@ export function AboutForm({ initial }: { initial: string }) {
   return (
     <form action={action} className="form">
       <div className="row">
-        <label htmlFor="about">內容 <small>空一行分段，「## 」開頭的那行會變成小標題</small></label>
+        <label htmlFor="about">內容 <small>空一行分段，「## 」開頭的那行會變成小標題，單獨一行寫 [集章圖解] 會放入集章圖解</small></label>
         <textarea className="input" id="about" name="about" style={{ minHeight: 480, fontFamily: "var(--body)" }} defaultValue={initial} />
       </div>
       <div className="bar">

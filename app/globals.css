@@ -509,3 +509,32 @@ footer.site { padding: 32px 0 48px; font-size: 13px; color: var(--ink-2); border
 @media (prefers-reduced-motion: reduce) {
   .btn.primary .hand-ico { animation: none !important; }
 }
+
+/* ---------- 集章圖解 ---------- */
+.howto { display: grid; gap: 14px; margin: 16px 0 8px; }
+.howto-step { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: 18px 16px 14px; }
+.howto-art { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 76px; flex-wrap: wrap; }
+.howto-arrow { font-family: var(--mono); color: var(--ink-2); font-size: 18px; }
+.howto-check { width: 44px; height: 44px; border-radius: 50%; border: 1.5px dashed var(--ink-2); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; color: var(--ink); }
+.howto-seal { width: 64px; height: 64px; aspect-ratio: auto; --r: -3deg; }
+.howto-seal .e { font-size: 24px; }
+.howto-seal.sm { width: 46px; height: 46px; }
+.howto-seal.sm .e { font-size: 20px; }
+.howto-seal.sm:nth-child(2) { --r: 2deg; } .howto-seal.sm:nth-child(3) { --r: -2deg; }
+.howto-ticket {
+  display: inline-flex; align-items: center; height: 40px; padding: 0 14px 0 12px; background: var(--hl); border-radius: 4px;
+  font-family: var(--display); font-weight: 700; font-size: 15px; position: relative; transform: rotate(-1.5deg);
+  -webkit-mask: radial-gradient(circle at 0 50%, transparent 6px, #000 6.5px) left / 51% 100% no-repeat, radial-gradient(circle at 100% 50%, transparent 6px, #000 6.5px) right / 50% 100% no-repeat;
+          mask: radial-gradient(circle at 0 50%, transparent 6px, #000 6.5px) left / 51% 100% no-repeat, radial-gradient(circle at 100% 50%, transparent 6px, #000 6.5px) right / 50% 100% no-repeat;
+}
+.howto-ticket .t { border-left: 1.5px dashed rgba(27,32,39,.35); padding-left: 10px; margin-left: 4px; }
+.howto-prizes { display: inline-flex; gap: 10px; }
+.howto-prizes span { display: inline-flex; flex-direction: column; align-items: center; font-size: 24px; line-height: 1.1; }
+.howto-prizes small { font-size: 11px; color: var(--ink-2); margin-top: 4px; white-space: nowrap; }
+.howto-cap { margin: 12px 0 0; text-align: center; font-size: 15px; color: var(--ink-2); }
+.howto-cap b { color: var(--ink); font-weight: 500; margin-right: 4px; }
+.howto-note { text-align: center; margin: 4px 0 0; }
+@media (min-width: 768px) {
+  .howto-step { display: grid; grid-template-columns: 1fr 180px; align-items: center; gap: 12px; padding: 16px 20px; }
+  .howto-cap { margin: 0; text-align: left; }
+}

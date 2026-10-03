@@ -7,11 +7,7 @@ export const DEFAULT_ABOUT = `## 這裡是什麼
 看到有興趣的，按「我也想」。不用登入、不算報名，只是舉個手。我會自己來找你。
 
 ## 集章怎麼玩
-跟我一起把一件事做完，蓋一章。
-
-集滿 3 章，換一張小傑券。可以換飲料、換我幫你做一件事、或是下一個企劃換你出題。
-
-章不會被扣走，券不會過期。慢慢集沒關係。
+[集章圖解]
 
 ## 集章卡在哪
 我會私下丟一條連結給你，那就是你的卡。存起來，之後按「我也想」就不用再打名字。
@@ -30,7 +26,9 @@ export async function setSetting(key: string, value: string) {
     .onConflictDoUpdate({ target: settings.key, set: { value, updatedAt: new Date() } });
 }
 
-export type AboutBlock = { type: "heading"; text: string } | { type: "paragraph"; text: string };
+export type AboutBlock = { type: "heading"; text: string } | { type: "paragraph"; text: string } | { type: "howto" };
+
+export const HOWTO_TOKEN = "[集章圖解]";
 
 export function parseAbout(raw: string): AboutBlock[] {
   const blocks: AboutBlock[] = [];
@@ -43,6 +41,7 @@ export function parseAbout(raw: string): AboutBlock[] {
       body = rest.join("\n").trim();
       if (!body) continue;
     }
+    if (body === HOWTO_TOKEN) { blocks.push({ type: "howto" }); continue; }
     blocks.push({ type: "paragraph", text: body });
   }
   return blocks;

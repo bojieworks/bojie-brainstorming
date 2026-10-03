@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DEFAULT_ABOUT, getSetting, parseAbout } from "@/lib/settings";
+import { StampHowTo } from "@/components/public/stamp-howto";
 
 export const metadata = { title: "關於這個網站" };
 
@@ -17,9 +18,9 @@ export default async function AboutPage() {
         <h1 className="h2">關於這個網站</h1>
         <div className="about">
           {blocks.map((b, i) =>
-            b.type === "heading"
-              ? <p key={i} className="label about-heading">{b.text}</p>
-              : <p key={i} className="about-p">{b.text}</p>,
+            b.type === "heading" ? <p key={i} className="label about-heading">{b.text}</p>
+            : b.type === "howto" ? <StampHowTo key={i} />
+            : <p key={i} className="about-p">{b.text}</p>,
           )}
         </div>
         <section className="block">
