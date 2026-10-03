@@ -22,6 +22,12 @@ export const updateKindEnum = pgEnum("update_kind", ["manual", "system"]);
 
 export type ProjectLink = { label: string; url: string };
 
+export const settings = pgTable("settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull().default(""),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const categories = pgTable("categories", {
   key: text("key").primaryKey(),
   label: text("label").notNull(),
