@@ -8,6 +8,7 @@ const items = [
   { href: "/admin/projects", label: "企劃" },
   { href: "/admin/friends", label: "朋友" },
   { href: "/admin/rewards", label: "券菜單" },
+  { href: "/admin/categories", label: "分類" },
 ];
 
 export function AdminNav() {

@@ -1,16 +1,16 @@
 import Link from "next/link";
 import type { ProjectWithCount } from "@/lib/projects";
-import { CATEGORY, EFFORT, SIZE } from "@/lib/labels";
+import { EFFORT, SIZE } from "@/lib/labels";
 import { People } from "./people";
 import { StatusStamp } from "./status-stamp";
 
-export function ProjectCard({ p, index = 0 }: { p: ProjectWithCount; index?: number }) {
+export function ProjectCard({ p, color, index = 0 }: { p: ProjectWithCount; color: string; index?: number }) {
   const specs = [EFFORT[p.effort], p.timeHint, p.idealSize ? SIZE[p.idealSize] : ""].filter(Boolean);
   return (
     <Link
       className="card"
       href={`/p/${p.slug}`}
-      style={{ ["--cat" as string]: CATEGORY[p.category].color, animationDelay: `${Math.min(index * 50, 300)}ms` }}
+      style={{ ["--cat" as string]: color, animationDelay: `${Math.min(index * 50, 300)}ms` }}
     >
       {p.coverUrl && (
         <div className="cover">

@@ -2,11 +2,15 @@ import type { Friend, Interest } from "@/lib/db";
 import { LEVEL } from "@/lib/labels";
 import { relative } from "@/lib/format";
 import { markInterest } from "@/app/admin/projects/actions";
+import { ConfirmButton } from "./confirm-button";
 
-type Row = Interest & { friend: Friend | null };
+type Row = Interest & { friend: Friend | null; duplicateName?: boolean };
 
 export function InterestsPanel({ projectId, items }: { projectId: number; items: Row[] }) {
   const visible = items.filter((i) => i.status !== "spam");
+  const seen = new Map<string, number>();
+  visible.forEach((i) => seen.set(i.name, (seen.get(i.name) ?? 0) + 1));
+  visible.forEach((i) => { i.duplicateName = (seen.get(i.name) ?? 0) > 1; });
   return (
     <section className="section">
       <p className="label">想一起的人 · {visible.length}</p>
@@ -26,7 +30,7 @@ export function InterestsPanel({ projectId, items }: { projectId: number; items:
                   </button>
                 </form>
                 <div>
-                  <span className="who"><b>{i.name}</b><span className={`tag${i.level === "serious" ? " serious" : ""}`}>{LEVEL[i.level]}</span></span>
+                  <span className="who"><b className="person">{i.name}</b><span className={`tag${i.level === "serious" ? " serious" : ""}`}>{LEVEL[i.level]}</span>{i.duplicateName && <span className="tag warn">同名已有一筆</span>}</span>
                   {i.note && <p className="note">「{i.note}」</p>}
                   <div className="meta">
                     {relative(i.createdAt)}
@@ -35,7 +39,7 @@ export function InterestsPanel({ projectId, items }: { projectId: number; items:
                     {i.contact && ` · 聯絡方式：${i.contact}`}
                   </div>
                 </div>
-                <form action={spam}><button className="mini-btn danger" type="submit">不是朋友</button></form>
+                <form action={spam}><ConfirmButton className="mini-btn danger" message={`把 ${i.name} 標成不是朋友？會從人數裡排除。`}>不是朋友</ConfirmButton></form>
               </li>
             );
           })}

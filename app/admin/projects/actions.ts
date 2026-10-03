@@ -7,6 +7,7 @@ import { addUpdate, createProject, deleteUpdate, getProjectById, setInterestStat
 import type { ProjectLink } from "@/lib/db";
 import { saveImage } from "@/lib/uploads";
 import { stampForProject } from "@/lib/friends";
+import { categoryMap } from "@/lib/categories";
 import { eq } from "drizzle-orm";
 import { db, projects } from "@/lib/db";
 
@@ -15,7 +16,7 @@ const schema = z.object({
   emoji: z.string().trim().min(1).max(8).default("💭"),
   tagline: z.string().trim().max(60).default(""),
   why: z.string().trim().default(""),
-  category: z.enum(["outdoor", "travel", "create", "learn", "project", "life"]),
+  category: z.string().min(1, "選一個分類"),
   status: z.enum(["idea", "forming", "active", "done", "parked"]),
   openToJoin: z.boolean(),
   published: z.boolean(),
@@ -88,6 +89,7 @@ function read(formData: FormData) {
 export async function saveProject(id: number | null, _prev: SaveState, formData: FormData): Promise<SaveState> {
   const parsed = read(formData);
   if (!parsed.success) return { message: parsed.error.issues[0]?.message ?? "有欄位不對" };
+  if (!(await categoryMap())[parsed.data.category]) return { message: "這個分類不存在" };
   const { links, status, retroPhotos, ...rest } = parsed.data;
   const data = {
     ...rest,

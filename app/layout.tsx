@@ -9,7 +9,7 @@ const hand = Iansui({ subsets: ["latin"], weight: "400", variable: "--font-hand"
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: { default: "小傑想做的事", template: "%s · 小傑想做的事" },
+  title: { default: "小傑實驗室", template: "%s · 小傑實驗室" },
   description: "我想做但還沒做的事。看到想一起的，按一下跟我說。",
   robots: { index: false, follow: false },
 };

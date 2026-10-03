@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { listProjectsPublic } from "@/lib/projects";
-import { CATEGORY, type CategoryKey } from "@/lib/labels";
+import { listCategories } from "@/lib/categories";
 import { yearMonth } from "@/lib/format";
 import { ProjectCard } from "@/components/public/project-card";
 import { Chips } from "@/components/public/chips";
 
 export default async function Home(props: PageProps<"/">) {
   const sp = await props.searchParams;
-  const c = typeof sp.c === "string" && sp.c in CATEGORY ? (sp.c as CategoryKey) : null;
-  const all = await listProjectsPublic();
+  const [all, cats] = await Promise.all([listProjectsPublic(), listCategories()]);
+  const colors = Object.fromEntries(cats.map((x) => [x.key, x.color]));
+  const c = typeof sp.c === "string" && colors[sp.c] ? sp.c : null;
   const live = all.filter((p) => p.status === "forming" || p.status === "active");
   const ideasAll = all.filter((p) => p.status === "idea");
   const ideas = c ? ideasAll.filter((p) => p.category === c) : ideasAll;
@@ -18,7 +19,7 @@ export default async function Home(props: PageProps<"/">) {
   return (
     <div className="wrap">
       <header className="top">
-        <Link className="brand" href="/">小傑想做的事</Link>
+        <Link className="brand" href="/">小傑實驗室</Link>
         <nav><Link href="/about">關於</Link></nav>
       </header>
 
@@ -34,20 +35,20 @@ export default async function Home(props: PageProps<"/">) {
       {live.length > 0 && (
         <section className="section" id="live">
           <p className="label">正在發生</p>
-          <div className="cards wide">{live.map((p, i) => <ProjectCard key={p.id} p={p} index={i} />)}</div>
+          <div className="cards wide">{live.map((p, i) => <ProjectCard key={p.id} p={p} color={colors[p.category] ?? "var(--ink)"} index={i} />)}</div>
         </section>
       )}
 
       <section className="section" id="ideas">
         <p className="label">想做的事 · <b>{ideas.length}</b></p>
-        <Suspense fallback={<div className="chips" />}><Chips /></Suspense>
+        <Suspense fallback={<div className="chips" />}><Chips categories={cats} /></Suspense>
         {ideas.length === 0 ? (
           <p className="empty-line">
             {c ? "這個分類還沒有想法，可能是我還沒想到。" : "還沒有想法，等我一下。"}
             {c && <Link href="/#ideas" className="linkish" style={{ marginLeft: 8 }}>看全部</Link>}
           </p>
         ) : (
-          <div className="cards">{ideas.map((p, i) => <ProjectCard key={p.id} p={p} index={i} />)}</div>
+          <div className="cards">{ideas.map((p, i) => <ProjectCard key={p.id} p={p} color={colors[p.category] ?? "var(--ink)"} index={i} />)}</div>
         )}
       </section>
 
@@ -80,7 +81,7 @@ export default async function Home(props: PageProps<"/">) {
       </section>
 
       <footer className="site">
-        這是小傑的個人網站。想法都是真的，日期大多還沒確定。有問題直接找我。
+        歡迎一起來玩
       </footer>
     </div>
   );

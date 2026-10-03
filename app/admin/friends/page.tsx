@@ -15,7 +15,7 @@ export default async function FriendsPage() {
             <label htmlFor="name">名字 <small>建好會拿到他的集章卡連結</small></label>
             <div style={{ display: "flex", gap: 8 }}>
               <input className="input" id="name" name="name" required />
-              <button className="btn primary" type="submit" style={{ width: "auto", height: 48 }}>建立</button>
+              <button className="btn primary" type="submit" style={{ width: "auto", height: 48, flex: "0 0 auto", whiteSpace: "nowrap" }}>建立</button>
             </div>
           </div>
         </form>

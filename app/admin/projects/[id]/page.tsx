@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getProjectById, listInterests, listUpdates } from "@/lib/projects";
 import { listFriends } from "@/lib/friends";
+import { listCategories } from "@/lib/categories";
 import { db, stamps } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { monthDay } from "@/lib/format";
@@ -20,11 +21,12 @@ export default async function EditProjectPage(props: PageProps<"/admin/projects/
   if (!Number.isInteger(projectId)) notFound();
   const project = await getProjectById(projectId);
   if (!project) notFound();
-  const [updates, interests, friends, stamped] = await Promise.all([
+  const [updates, interests, friends, stamped, cats] = await Promise.all([
     listUpdates(projectId),
     listInterests(projectId),
     listFriends(),
     db.query.stamps.findMany({ where: eq(stamps.projectId, projectId) }),
+    listCategories(),
   ]);
   const stampedIds = new Set(stamped.map((s) => s.friendId));
   const friendOpts = friends.map((f) => ({ id: f.id, name: f.name, stamped: stampedIds.has(f.id) }));
@@ -36,7 +38,7 @@ export default async function EditProjectPage(props: PageProps<"/admin/projects/
         建立於 {monthDay(project.createdAt)} · 最後動靜 {monthDay(project.lastActivityAt)}
       </p>
       <div className="grid2">
-        <ProjectForm project={project} friends={friendOpts} />
+        <ProjectForm project={project} friends={friendOpts} categories={cats} />
         <aside className="side">
           <UpdatesPanel projectId={projectId} items={updates} />
           <InterestsPanel projectId={projectId} items={interests} />

@@ -36,7 +36,7 @@ export default async function ProjectPage(props: PageProps<"/p/[slug]">) {
   const isDone = p.status === "done";
   const specs = [
     { k: "投入", v: EFFORT[p.effort] },
-    { k: "時間", v: p.startDate ? `${monthDay(p.startDate)}${p.endDate ? ` – ${monthDay(p.endDate)}` : ""}` : p.timeHint || "還沒定" },
+    { k: "時間", v: p.startDate ? `${monthDay(p.startDate)}${p.endDate && p.endDate !== p.startDate ? ` – ${monthDay(p.endDate)}` : ""}` : p.timeHint || "還沒定" },
     { k: "人數", v: p.idealSize ? SIZE[p.idealSize] : "不限" },
   ];
   const siteUrl = `${process.env.SITE_URL ?? ""}/p/${p.slug}`;
@@ -150,7 +150,6 @@ export default async function ProjectPage(props: PageProps<"/p/[slug]">) {
         <Header />
         <div className="grid">
           <main className="main">
-            <p className="context">小傑想做的事之一。有興趣可以按下面的按鈕，不算報名。</p>
             {p.coverUrl ? (
               /* eslint-disable-next-line @next/next/no-img-element */
               <div className="cover" style={{ aspectRatio: "16/9", borderRadius: 6, overflow: "hidden", marginBottom: 14 }}><img src={p.coverUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /></div>
@@ -201,7 +200,7 @@ function Header() {
     <header className="top">
       <Link className="brand back" href="/">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-        小傑想做的事
+        小傑實驗室
       </Link>
     </header>
   );

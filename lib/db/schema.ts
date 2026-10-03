@@ -13,7 +13,6 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
-export const categoryEnum = pgEnum("category", ["outdoor", "travel", "create", "learn", "project", "life"]);
 export const statusEnum = pgEnum("status", ["idea", "forming", "active", "done", "parked"]);
 export const effortEnum = pgEnum("effort", ["afternoon", "weekend", "week_plus", "ongoing"]);
 export const sizeEnum = pgEnum("ideal_size", ["one_two", "three_five", "many"]);
@@ -22,6 +21,13 @@ export const interestStatusEnum = pgEnum("interest_status", ["new", "contacted",
 export const updateKindEnum = pgEnum("update_kind", ["manual", "system"]);
 
 export type ProjectLink = { label: string; url: string };
+
+export const categories = pgTable("categories", {
+  key: text("key").primaryKey(),
+  label: text("label").notNull(),
+  color: text("color").notNull(),
+  sort: integer("sort").notNull().default(0),
+});
 
 export const projects = pgTable(
   "projects",
@@ -32,7 +38,7 @@ export const projects = pgTable(
     title: text("title").notNull(),
     tagline: text("tagline").notNull().default(""),
     why: text("why").notNull().default(""),
-    category: categoryEnum("category").notNull().default("life"),
+    category: text("category").notNull().default("life").references(() => categories.key),
     status: statusEnum("status").notNull().default("idea"),
     openToJoin: boolean("open_to_join").notNull().default(true),
     effort: effortEnum("effort").notNull().default("afternoon"),
@@ -160,6 +166,7 @@ export const redemptionsRelations = relations(redemptions, ({ one }) => ({
   item: one(rewardItems, { fields: [redemptions.rewardItemId], references: [rewardItems.id] }),
 }));
 
+export type Category = typeof categories.$inferSelect;
 export type Project = typeof projects.$inferSelect;
 export type NewProject = typeof projects.$inferInsert;
 export type Update = typeof updates.$inferSelect;

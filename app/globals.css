@@ -481,3 +481,17 @@ footer.site { padding: 32px 0 48px; font-size: 13px; color: var(--ink-2); border
 .timeline .tl-photo { margin-top: 8px; max-width: 320px; border-radius: var(--r); overflow: hidden; }
 .timeline .tl-photo img { width: 100%; display: block; }
 .updates-admin .file-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2); }
+
+/* ---------- admin tweaks ---------- */
+.todo .who .person { font-family: var(--display); font-weight: 700; font-size: 18px; margin-right: 8px; }
+.todo .what { font-size: 14px; color: var(--ink-2); margin-top: 2px; }
+.todo .what a { color: var(--ink); border-bottom: 1px solid var(--line); }
+.todo .tag.warn { border-color: #c47a2c; color: #8a4b0f; }
+.photo-pick { display: flex; align-items: center; gap: 10px; }
+.photo-pick-preview { display: flex; align-items: center; gap: 12px; }
+.photo-pick-preview img { width: 72px; height: 54px; object-fit: cover; border-radius: var(--r); display: block; }
+.cat-list li { grid-template-columns: 1fr auto; }
+.cat-row { display: flex; align-items: center; gap: 10px; }
+.cat-row input[type="color"] { width: 36px; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: var(--r); background: transparent; cursor: pointer; }
+.cat-row .input { height: 40px; max-width: 220px; }
+.cat-row .st { white-space: nowrap; }

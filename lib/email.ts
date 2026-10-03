@@ -12,7 +12,7 @@ export async function notifyOwner(mail: Mail) {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: process.env.FROM_EMAIL ?? "小傑想做的事 <onboarding@resend.dev>",
+        from: process.env.FROM_EMAIL ?? "小傑實驗室 <onboarding@resend.dev>",
         to: [to],
         subject: mail.subject,
         text: mail.text,

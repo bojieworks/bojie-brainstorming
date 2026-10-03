@@ -2,14 +2,15 @@
 
 import { useActionState, useState } from "react";
 import type { Project } from "@/lib/db";
-import { CATEGORY, EFFORT, SIZE, STATUS, type StatusKey } from "@/lib/labels";
+import { EFFORT, SIZE, STATUS, type StatusKey } from "@/lib/labels";
 import { deleteProject, saveProject, type SaveState } from "@/app/admin/projects/actions";
 import { ImageField, PhotosField } from "./image-field";
 
 type FriendOpt = { id: number; name: string; stamped: boolean };
-type Props = { project: Project | null; friends?: FriendOpt[] };
+type CatOpt = { key: string; label: string };
+type Props = { project: Project | null; friends?: FriendOpt[]; categories: CatOpt[] };
 
-export function ProjectForm({ project, friends = [] }: Props) {
+export function ProjectForm({ project, friends = [], categories }: Props) {
   const bound = saveProject.bind(null, project?.id ?? null);
   const removeAction = project ? deleteProject.bind(null, project.id) : undefined;
   const [state, action, pending] = useActionState<SaveState, FormData>(bound, { message: "" });
@@ -72,8 +73,8 @@ export function ProjectForm({ project, friends = [] }: Props) {
         </div>
         <div className="row">
           <label htmlFor="category">分類</label>
-          <select className="input" id="category" name="category" defaultValue={project?.category ?? "life"}>
-            {Object.entries(CATEGORY).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+          <select className="input" id="category" name="category" defaultValue={project?.category ?? categories[0]?.key}>
+            {categories.map((c) => <option key={c.key} value={c.key}>{c.label}</option>)}
           </select>
         </div>
       </div>

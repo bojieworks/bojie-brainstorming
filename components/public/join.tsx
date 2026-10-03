@@ -46,7 +46,7 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
   useEffect(() => {
     const m = loadMe();
     setMe(m);
-    mine(projectId, m.clientKey).then(setMyInterest);
+    mine(projectId, m.clientKey, m.friendToken).then(setMyInterest);
   }, [projectId]);
 
   useEffect(() => {
@@ -95,7 +95,7 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
   }, null);
 
   const doCancel = async () => {
-    const res = await cancel(projectId, me.clientKey);
+    const res = await cancel(projectId, me.clientKey, me.friendToken);
     if (res.ok) { setCount(res.count); setMyInterest(null); setView("cancelled"); setTimeout(close, 1500); }
   };
 
@@ -162,7 +162,7 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
                 <p className="contact-link">小傑可能不知道怎麼找你？<button type="button" className="linkish" onClick={() => setShowContact(true)}>留個聯絡方式</button></p>
               )}
               {myInterest && (
-                <p className="cancel-row"><button type="button" className="linkish" onClick={doCancel}>取消，這次不一起</button></p>
+                <p className="cancel-row"><button type="button" className="linkish" onClick={doCancel}>取消</button></p>
               )}
             </form>
           </div>
@@ -171,7 +171,7 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
           <div className="success">
             <People count={count} size="xl" max={10} newest />
             <h2>收到！小傑會來找你。</h2>
-            <p className="muted" style={{ margin: "4px 0 0", fontSize: 15 }}>通常幾天內，用你們平常聊天的方式。</p>
+            <p className="muted" style={{ margin: "4px 0 0", fontSize: 15 }}>通常幾天內。</p>
             <p className="count">現在 {count} 人想一起</p>
             <NamesLine names={names} count={count} />
             <div className="actions"><CopyLink label="丟給可能也想去的朋友" /></div>

@@ -18,11 +18,22 @@ export async function publicNames(projectId: number) {
   return rows.map((r) => r.name);
 }
 
-export async function findMine(projectId: number, clientKey: string) {
+async function findOpen(projectId: number, clientKey: string, friendId?: number | null, includeSpam = false) {
+  const spamFilter = includeSpam ? undefined : ne(interests.status, "spam");
+  if (friendId) {
+    const byFriend = await db.query.interests.findFirst({
+      where: and(eq(interests.projectId, projectId), eq(interests.friendId, friendId), isNull(interests.cancelledAt), spamFilter),
+    });
+    if (byFriend) return byFriend;
+  }
   if (!clientKey) return null;
   return db.query.interests.findFirst({
-    where: and(eq(interests.projectId, projectId), eq(interests.clientKey, clientKey), isNull(interests.cancelledAt)),
+    where: and(eq(interests.projectId, projectId), eq(interests.clientKey, clientKey), isNull(interests.cancelledAt), spamFilter),
   });
+}
+
+export async function findMine(projectId: number, clientKey: string, friendId?: number | null) {
+  return findOpen(projectId, clientKey, friendId, false);
 }
 
 export async function friendByToken(token?: string) {
@@ -43,7 +54,8 @@ export type JoinInput = {
 
 export async function upsertInterest(input: JoinInput) {
   const friend = await friendByToken(input.friendToken);
-  const existing = await findMine(input.projectId, input.clientKey);
+  const existing = await findOpen(input.projectId, input.clientKey, friend?.id, true);
+  if (existing?.status === "spam") return { row: existing, created: false };
   const values = {
     name: input.name,
     level: input.level,
@@ -53,7 +65,7 @@ export async function upsertInterest(input: JoinInput) {
     friendId: friend?.id ?? null,
   };
   if (existing) {
-    const [row] = await db.update(interests).set(values).where(eq(interests.id, existing.id)).returning();
+    const [row] = await db.update(interests).set({ ...values, clientKey: input.clientKey }).where(eq(interests.id, existing.id)).returning();
     return { row, created: false };
   }
   const [row] = await db
@@ -64,8 +76,9 @@ export async function upsertInterest(input: JoinInput) {
   return { row, created: true };
 }
 
-export async function cancelMine(projectId: number, clientKey: string) {
-  const mine = await findMine(projectId, clientKey);
+export async function cancelMine(projectId: number, clientKey: string, friendToken?: string) {
+  const friend = await friendByToken(friendToken);
+  const mine = await findMine(projectId, clientKey, friend?.id);
   if (!mine) return false;
   await db.update(interests).set({ cancelledAt: new Date() }).where(eq(interests.id, mine.id));
   return true;

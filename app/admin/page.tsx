@@ -4,6 +4,7 @@ import { db, interests } from "@/lib/db";
 import { LEVEL } from "@/lib/labels";
 import { relative } from "@/lib/format";
 import { markInterest } from "./projects/actions";
+import { ConfirmButton } from "@/components/admin/confirm-button";
 import { listPendingRedemptions } from "@/lib/friends";
 import { markFulfilled } from "./friends/actions";
 
@@ -38,9 +39,10 @@ export default async function AdminHome() {
                   </form>
                   <div>
                     <span className="who">
-                      <b>{i.name}</b> 想一起 <Link href={`/admin/projects/${i.projectId}`}>{i.project.title}</Link>
+                      <b className="person">{i.name}</b>
                       <span className={`tag${i.level === "serious" ? " serious" : ""}`}>{LEVEL[i.level]}</span>
                     </span>
+                    <div className="what">想一起 <Link href={`/admin/projects/${i.projectId}`}>{i.project.emoji} {i.project.title}</Link></div>
                     {i.note && <p className="note">「{i.note}」</p>}
                     <div className="meta">
                       {relative(i.createdAt)}
@@ -49,7 +51,7 @@ export default async function AdminHome() {
                       {i.contact && ` · 聯絡方式：${i.contact}`}
                     </div>
                   </div>
-                  <form action={spam}><button className="mini-btn danger" type="submit">不是朋友</button></form>
+                  <form action={spam}><ConfirmButton className="mini-btn danger" message={`把 ${i.name} 標成不是朋友？會從人數裡排除。`}>不是朋友</ConfirmButton></form>
                 </li>
               );
             })}
@@ -72,7 +74,8 @@ export default async function AdminHome() {
                     </button>
                   </form>
                   <div>
-                    <span className="who"><b>{r.friend.name}</b> 想換 <b>{r.item.title}</b></span>
+                    <span className="who"><b className="person">{r.friend.name}</b></span>
+                    <div className="what">想換 <b>{r.item.title}</b></div>
                     <div className="meta">{relative(r.requestedAt)} · 第 {r.couponIndex * 3 + 1}–{(r.couponIndex + 1) * 3} 章的券 · <Link href={`/admin/friends/${r.friendId}`}>看他的卡</Link></div>
                   </div>
                 </li>
@@ -80,10 +83,6 @@ export default async function AdminHome() {
             })}
           </ul>
         )}
-      </section>
-      <section className="section">
-        <p className="label">企劃</p>
-        <Link href="/admin/projects" className="btn secondary" style={{ width: "auto" }}>看全部企劃 →</Link>
       </section>
     </>
   );

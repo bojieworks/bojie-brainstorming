@@ -25,7 +25,7 @@ export default async function CardPage(props: PageProps<"/card/[token]">) {
       <header className="top">
         <Link className="brand back" href="/">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-          小傑想做的事
+          小傑實驗室
         </Link>
       </header>
       <main className="main">

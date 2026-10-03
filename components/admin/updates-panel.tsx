@@ -1,6 +1,7 @@
 import type { Update } from "@/lib/db";
 import { monthDay } from "@/lib/format";
 import { postUpdate, removeUpdate } from "@/app/admin/projects/actions";
+import { PhotoPicker } from "./photo-picker";
 
 export function UpdatesPanel({ projectId, items }: { projectId: number; items: Update[] }) {
   const post = postUpdate.bind(null, projectId);
@@ -9,11 +10,9 @@ export function UpdatesPanel({ projectId, items }: { projectId: number; items: U
       <p className="label" style={{ paddingTop: 0 }}>發一則更新</p>
       <form action={post} className="updates-admin">
         <textarea className="input" name="body" placeholder="先把 10 月的週末都問一遍，再決定哪三天。" />
+        <PhotoPicker name="photo" />
         <div className="send">
           <button className="btn primary" type="submit">發布</button>
-          <label className="file-row">
-            <input type="file" name="photo" accept="image/*" style={{ maxWidth: 200 }} />
-          </label>
         </div>
       </form>
       <ul className="timeline" style={{ marginTop: 12 }}>

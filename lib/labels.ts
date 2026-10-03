@@ -1,12 +1,3 @@
-export const CATEGORY = {
-  outdoor: { label: "戶外", color: "var(--cat-outdoor)" },
-  travel: { label: "旅行", color: "var(--cat-travel)" },
-  create: { label: "創作", color: "var(--cat-create)" },
-  learn: { label: "學習", color: "var(--cat-learn)" },
-  project: { label: "專案", color: "var(--cat-project)" },
-  life: { label: "生活", color: "var(--cat-life)" },
-} as const;
-
 export const STATUS = {
   idea: { label: "想法", emoji: "💭", system: "小傑把這個想法寫下來" },
   forming: { label: "籌備中", emoji: "🙌", system: "開始籌備了" },
@@ -30,7 +21,6 @@ export const SIZE = {
 
 export const LEVEL = { curious: "先聊聊", serious: "認真的" } as const;
 
-export type CategoryKey = keyof typeof CATEGORY;
 export type StatusKey = keyof typeof STATUS;
 export type EffortKey = keyof typeof EFFORT;
 export type SizeKey = keyof typeof SIZE;

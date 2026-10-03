@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getProjectById } from "@/lib/projects";
-import { cancelMine, countInterests, findMine, publicNames, upsertInterest } from "@/lib/interests";
+import { cancelMine, countInterests, findMine, friendByToken, publicNames, upsertInterest } from "@/lib/interests";
 import { notifyOwner } from "@/lib/email";
 import { LEVEL } from "@/lib/labels";
 
@@ -65,8 +65,8 @@ export async function join(_prev: JoinState | null, formData: FormData): Promise
   return { ok: true, count, names, level: row.level };
 }
 
-export async function cancel(projectId: number, clientKey: string) {
-  const ok = await cancelMine(projectId, clientKey);
+export async function cancel(projectId: number, clientKey: string, friendToken?: string) {
+  const ok = await cancelMine(projectId, clientKey, friendToken);
   const project = await getProjectById(projectId);
   if (project) {
     revalidatePath(`/p/${project.slug}`);
@@ -75,7 +75,8 @@ export async function cancel(projectId: number, clientKey: string) {
   return { ok, count: await countInterests(projectId) };
 }
 
-export async function mine(projectId: number, clientKey: string) {
-  const m = await findMine(projectId, clientKey);
+export async function mine(projectId: number, clientKey: string, friendToken?: string) {
+  const friend = await friendByToken(friendToken);
+  const m = await findMine(projectId, clientKey, friend?.id);
   return m ? { level: m.level, name: m.name, note: m.note, showName: m.showName } : null;
 }
