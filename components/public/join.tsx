@@ -6,6 +6,16 @@ import { loadMe, saveMe, type Me } from "@/lib/identity";
 import { People } from "./people";
 import { CopyLink } from "./copy-link";
 
+const HandIcon = () => (
+  <svg className="hand-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M18 11V6a2 2 0 0 0-4 0v1" />
+    <path d="M14 10V4a2 2 0 0 0-4 0v2" />
+    <path d="M10 10.5V6a2 2 0 0 0-4 0v8" />
+    <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+  </svg>
+);
+const JoinLabel = () => <>我也想 <HandIcon /></>;
+
 type Mine = { level: "curious" | "serious"; name: string; note: string; showName: boolean } | null;
 type Ctx = {
   count: number;
@@ -114,7 +124,7 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
               <span className="count">{count} 人想一起</span>
             </div>
             <button className={`btn ${myInterest ? "joined" : "primary"}`} onClick={open} tabIndex={stickyVisible ? 0 : -1}>
-              {myInterest ? "你說過想一起 ✓" : "我也想 👋"}
+              {myInterest ? "你說過想一起 ✓" : <JoinLabel />}
             </button>
           </>
         ) : (
@@ -170,7 +180,7 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
         {view === "ok" && (
           <div className="success">
             <People count={count} size="xl" max={10} newest />
-            <h2>收到！小傑會來找你。</h2>
+            <h2><span className="hl-sweep">收到！</span>小傑會來找你。</h2>
             <p className="muted" style={{ margin: "4px 0 0", fontSize: 15 }}>通常幾天內。</p>
             <p className="count">現在 {count} 人想一起</p>
             <NamesLine names={names} count={count} />
@@ -223,7 +233,7 @@ export function JoinButton() {
   return (
     <div className="cta-block" data-cta>
       <button className={`btn ${mine ? "joined" : "primary"}`} onClick={open}>
-        {mine ? "你說過想一起 ✓" : "我也想 👋"}
+        {mine ? "你說過想一起 ✓" : <JoinLabel />}
       </button>
       <p className="cta-note">不是報名，只是讓小傑知道。</p>
     </div>

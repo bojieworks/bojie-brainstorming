@@ -501,3 +501,30 @@ footer.site { padding: 32px 0 48px; font-size: 13px; color: var(--ink-2); border
 .about-heading { margin: 28px 0 10px; padding-top: 20px; border-top: 1px solid var(--line); }
 .about-heading:first-child { border-top: 0; padding-top: 0; margin-top: 16px; }
 .about-p { font-size: 17px; line-height: 1.8; margin: 0 0 1em; white-space: pre-line; }
+
+/* ---------- 我也想：舉手 ---------- */
+.btn .hand-ico { width: 20px; height: 20px; margin-left: 2px; transform-origin: 70% 95%; }
+.btn.primary:hover .hand-ico, .btn.primary:focus-visible .hand-ico, .btn.primary:active .hand-ico { animation: wave .7s ease-in-out; }
+.btn.primary { transition: background .15s, border-color .15s, transform .12s; }
+.btn.primary:active { transform: scale(.985); }
+@keyframes wave {
+  0% { transform: rotate(0); } 20% { transform: rotate(16deg); } 40% { transform: rotate(-10deg); }
+  60% { transform: rotate(10deg); } 80% { transform: rotate(-5deg); } 100% { transform: rotate(0); }
+}
+.tally i.new { position: relative; }
+.tally i.new::before {
+  content: ""; position: absolute; inset: -7px; border-radius: 50%; background: var(--hl); z-index: -1;
+  transform: scale(0); animation: ring .4s cubic-bezier(.34,1.4,.64,1) forwards; animation-delay: .45s;
+}
+.tally.xl i.new::before { inset: -9px; }
+@keyframes ring { to { transform: scale(1); } }
+.hl-sweep {
+  padding: 0 3px; background-image: linear-gradient(transparent 58%, var(--hl) 58%, var(--hl) 94%, transparent 94%);
+  background-repeat: no-repeat; background-size: 0% 100%; animation: sweep .55s ease-out forwards; animation-delay: .7s;
+}
+@keyframes sweep { to { background-size: 100% 100%; } }
+@media (prefers-reduced-motion: reduce) {
+  .btn.primary .hand-ico { animation: none !important; }
+  .tally i.new::before { animation: none; transform: scale(1); }
+  .hl-sweep { animation: none; background-size: 100% 100%; }
+}
