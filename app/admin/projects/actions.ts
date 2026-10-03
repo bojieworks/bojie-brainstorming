@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { addUpdate, createProject, deleteUpdate, getProjectById, setInterestStatus, setStatus, updateProject } from "@/lib/projects";
 import type { ProjectLink } from "@/lib/db";
-import { saveImage } from "@/lib/uploads";
+import { isUploadUrl, saveImage } from "@/lib/uploads";
 import { stampForProject } from "@/lib/friends";
 import { categoryMap } from "@/lib/categories";
 import { eq } from "drizzle-orm";
@@ -52,7 +52,7 @@ function parseLinks(raw: string): ProjectLink[] {
 function parsePhotos(raw: string): string[] {
   try {
     const arr = JSON.parse(raw);
-    return Array.isArray(arr) ? arr.filter((x): x is string => typeof x === "string" && x.startsWith("/uploads/")) : [];
+    return Array.isArray(arr) ? arr.filter((x): x is string => typeof x === "string" && isUploadUrl(x)) : [];
   } catch {
     return [];
   }

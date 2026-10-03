@@ -19,23 +19,31 @@ npm run dev
 - `npm run db:generate` 依 `lib/db/schema.ts` 產生 migration
 - `npm run db:migrate` 套用 migration（部署時也跑這個）
 
-## 部署（Zeabur）
+## 部署（Vercel + Neon + Cloudflare R2）
 
-1. Zeabur 建專案，加一個 **PostgreSQL** 服務。
-2. 再加一個 **Git** 服務，連這個 repo。Zeabur 會自動偵測 Next.js。
-3. 在 Next.js 服務的 Volumes 掛一個 volume 到 `/data/uploads`。
-4. 環境變數：
+全部免費方案。前端與後端都在 Next.js 裡，只需要一個 Vercel 專案。
+
+1. **Neon**：建專案，複製連線字串當 `DATABASE_URL`。
+2. **Cloudflare R2**：建 bucket，開啟公開存取拿到公開網址，建一組 API token（Object Read & Write）。
+3. **Resend**：拿 API key。
+4. **Vercel**：Import 這個 GitHub repo，填環境變數，Deploy。build 會先跑 migration。
 
 | 變數 | 值 |
 |---|---|
-| `DATABASE_URL` | 從 PostgreSQL 服務複製連線字串 |
+| `DATABASE_URL` | Neon 連線字串 |
 | `ADMIN_PASSWORD` | 後台密碼 |
 | `SESSION_SECRET` | 隨機 32 字元以上 |
-| `SITE_URL` | 正式網址，例如 `https://idea.example.tw` |
-| `UPLOAD_DIR` | `/data/uploads` |
+| `SITE_URL` | 正式網址，例如 `https://bojie-lab.vercel.app` |
+| `R2_ACCOUNT_ID` | Cloudflare 帳號 ID |
+| `R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` | R2 API token |
+| `R2_BUCKET` | bucket 名稱 |
+| `R2_PUBLIC_URL` | bucket 的公開網址，例如 `https://pub-xxxx.r2.dev` |
 | `RESEND_API_KEY` | Resend 的 key |
 | `NOTIFY_EMAIL` | 收通知的信箱 |
-| `FROM_EMAIL` | 可省略，預設用 Resend 測試寄件者 |
+| `FROM_EMAIL` | 可省略 |
 
-5. 部署。啟動指令 `npm start` 會先跑 migration 再啟動。
-6. 綁網域，把 `SITE_URL` 改成正式網址後重新部署一次。
+沒有設 R2 變數時，圖片會存到本機 `UPLOAD_DIR`（本機開發用）。
+
+### 其他主機（Zeabur、VPS）
+
+`npm start` 會先跑 migration 再啟動。圖片可以不用 R2，改掛 volume 並設 `UPLOAD_DIR`。
