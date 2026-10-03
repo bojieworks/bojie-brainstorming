@@ -180,7 +180,7 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
         {view === "ok" && (
           <div className="success">
             <People count={count} size="xl" max={10} newest />
-            <h2><span className="hl-sweep">收到！</span>小傑會來找你。</h2>
+            <h2>收到！小傑會來找你。</h2>
             <p className="muted" style={{ margin: "4px 0 0", fontSize: 15 }}>通常幾天內。</p>
             <p className="count">現在 {count} 人想一起</p>
             <NamesLine names={names} count={count} />
