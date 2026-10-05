@@ -1,15 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { uploadImage as upload } from "@/lib/client-upload";
 
-async function upload(file: File): Promise<string> {
-  const fd = new FormData();
-  fd.append("file", file);
-  const res = await fetch("/api/upload", { method: "POST", body: fd });
-  const json = (await res.json()) as { url?: string; error?: string };
-  if (!res.ok || !json.url) throw new Error(json.error ?? "上傳失敗");
-  return json.url;
-}
 
 export function ImageField({ name, label, hint, initial }: { name: string; label: string; hint?: string; initial: string }) {
   const [url, setUrl] = useState(initial);

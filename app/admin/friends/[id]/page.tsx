@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { friendCard, friendInterests, getFriend } from "@/lib/friends";
 import { listProjectsAdmin } from "@/lib/projects";
 import { LEVEL } from "@/lib/labels";
-import { monthDay, yearMonth } from "@/lib/format";
+import { monthDay, todayISO, yearMonth } from "@/lib/format";
 import { CopyText } from "@/components/admin/copy-text";
 import { ConfirmButton } from "@/components/admin/confirm-button";
 import { manualStamp, markFulfilled, removeFriend, removeStamp, updateFriendName } from "../actions";
@@ -82,7 +82,7 @@ export default async function FriendPage(props: PageProps<"/admin/friends/[id]">
                 </div>
                 <div className="row">
                   <label htmlFor="date">日期</label>
-                  <input className="input" id="date" name="date" type="date" defaultValue={new Date().toISOString().slice(0, 10)} />
+                  <input className="input" id="date" name="date" type="date" defaultValue={todayISO()} />
                 </div>
               </div>
               <div className="row">

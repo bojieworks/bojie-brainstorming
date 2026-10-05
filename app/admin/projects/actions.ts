@@ -1,11 +1,12 @@
 "use server";
 
+import { requireAdmin } from "@/lib/auth/require";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { addUpdate, createProject, deleteUpdate, getProjectById, setInterestStatus, setStatus, updateProject } from "@/lib/projects";
 import type { ProjectLink } from "@/lib/db";
-import { isUploadUrl, saveImage } from "@/lib/uploads";
+import { isUploadUrl } from "@/lib/uploads";
 import { stampForProject } from "@/lib/friends";
 import { categoryMap } from "@/lib/categories";
 import { eq } from "drizzle-orm";
@@ -87,6 +88,7 @@ function read(formData: FormData) {
 }
 
 export async function saveProject(id: number | null, _prev: SaveState, formData: FormData): Promise<SaveState> {
+  await requireAdmin();
   const parsed = read(formData);
   if (!parsed.success) return { message: parsed.error.issues[0]?.message ?? "有欄位不對" };
   if (!(await categoryMap())[parsed.data.category]) return { message: "這個分類不存在" };
@@ -121,11 +123,11 @@ export async function saveProject(id: number | null, _prev: SaveState, formData:
 }
 
 export async function postUpdate(projectId: number, formData: FormData) {
+  await requireAdmin();
   const body = String(formData.get("body") ?? "").replace(/\r\n/g, "\n").trim();
-  const photo = formData.get("photo");
-  if (!body && !(photo instanceof File && photo.size > 0)) return;
-  let photoUrl: string | null = null;
-  if (photo instanceof File && photo.size > 0) photoUrl = (await saveImage(photo)).url;
+  const rawUrl = String(formData.get("photo") ?? "").trim();
+  const photoUrl = rawUrl && isUploadUrl(rawUrl) ? rawUrl : null;
+  if (!body && !photoUrl) return;
   await addUpdate(projectId, body || "（照片）", photoUrl);
   const p = await getProjectById(projectId);
   revalidatePath(`/admin/projects/${projectId}`);
@@ -134,17 +136,20 @@ export async function postUpdate(projectId: number, formData: FormData) {
 }
 
 export async function removeUpdate(projectId: number, updateId: number) {
+  await requireAdmin();
   await deleteUpdate(updateId);
   revalidatePath(`/admin/projects/${projectId}`);
 }
 
 export async function markInterest(projectId: number, interestId: number, status: "new" | "contacted" | "spam") {
+  await requireAdmin();
   await setInterestStatus(interestId, status);
   revalidatePath(`/admin/projects/${projectId}`);
   revalidatePath("/admin");
 }
 
 export async function deleteProject(id: number) {
+  await requireAdmin();
   await db.delete(projects).where(eq(projects.id, id));
   revalidatePath("/");
   revalidatePath("/admin");

@@ -225,7 +225,7 @@ img { display: block; max-width: 100%; }
 /* desktop detail layout */
 @media (min-width: 768px) { .detail .main { max-width: var(--read); margin: 0 auto; } }
 @media (min-width: 960px) {
-  .detail .grid { display: grid; grid-template-columns: var(--read) 300px; gap: 48px; justify-content: space-between; }
+  .detail .grid { display: grid; grid-template-columns: minmax(0, var(--read)) 300px; gap: clamp(24px, 4vw, 48px); justify-content: space-between; }
   .detail .grid .main { margin: 0; }
   .detail .aside { position: sticky; top: 24px; align-self: start; }
   .detail .aside .specs { margin-top: 0; grid-template-columns: 1fr; }

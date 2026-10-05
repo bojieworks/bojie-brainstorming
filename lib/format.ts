@@ -1,11 +1,24 @@
+const TZ = "Asia/Taipei";
+
+function parts(d: Date | string) {
+  const p = new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date(d));
+  const get = (t: string) => p.find((x) => x.type === t)!.value;
+  return { y: get("year"), m: get("month"), d: get("day") };
+}
+
+export function todayISO() {
+  const { y, m, d } = parts(new Date());
+  return `${y}-${m}-${d}`;
+}
+
 export function monthDay(d: Date | string) {
-  const x = new Date(d);
-  return `${String(x.getMonth() + 1).padStart(2, "0")}.${String(x.getDate()).padStart(2, "0")}`;
+  const x = parts(d);
+  return `${x.m}.${x.d}`;
 }
 
 export function yearMonth(d: Date | string) {
-  const x = new Date(d);
-  return `${x.getFullYear()}.${String(x.getMonth() + 1).padStart(2, "0")}`;
+  const x = parts(d);
+  return `${x.y}.${x.m}`;
 }
 
 export function relative(d: Date | string) {

@@ -1,6 +1,7 @@
 import { and, asc, desc, eq, isNull } from "drizzle-orm";
 import { db, friends, interests, redemptions, rewardItems, stamps } from "@/lib/db";
 import { newToken } from "@/lib/slug";
+import { todayISO } from "@/lib/format";
 
 export const STAMPS_PER_COUPON = 3;
 
@@ -58,7 +59,7 @@ export async function stampForProject(friendIds: number[], project: { id: number
   if (friendIds.length === 0) return 0;
   const existing = await db.query.stamps.findMany({ where: eq(stamps.projectId, project.id) });
   const have = new Set(existing.map((s) => s.friendId));
-  const date = project.endDate ?? new Date().toISOString().slice(0, 10);
+  const date = project.endDate ?? todayISO();
   const fresh = friendIds.filter((id) => !have.has(id));
   if (fresh.length === 0) return 0;
   await db.insert(stamps).values(fresh.map((friendId) => ({ friendId, projectId: project.id, label: project.title, emoji: project.emoji, date })));
