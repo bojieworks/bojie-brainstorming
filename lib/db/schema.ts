@@ -21,6 +21,12 @@ export const updateKindEnum = pgEnum("update_kind", ["manual", "system"]);
 
 export type ProjectLink = { label: string; url: string };
 
+export const rateLimits = pgTable("rate_limits", {
+  key: text("key").primaryKey(),
+  windowStart: timestamp("window_start", { withTimezone: true }).notNull().defaultNow(),
+  count: integer("count").notNull().default(0),
+});
+
 export const settings = pgTable("settings", {
   key: text("key").primaryKey(),
   value: text("value").notNull().default(""),

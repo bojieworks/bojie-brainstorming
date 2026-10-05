@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useCallback, useEffect, useRef, useState } from "react";
+import { useModal } from "@/lib/use-modal";
 import { saveMe } from "@/lib/identity";
 import { redeem, type RedeemState } from "@/app/card/[token]/actions";
 
@@ -17,15 +18,9 @@ export function Coupons({ token, coupons, items, toNext }: { token: string; coup
   const [picked, setPicked] = useState(false);
   const [state, action, pending] = useActionState<RedeemState, FormData>(redeem, null);
 
-  useEffect(() => {
-    document.body.classList.toggle("sheet-open", open !== null);
-    if (open === null) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(null); };
-    document.addEventListener("keydown", onKey);
-    return () => { document.removeEventListener("keydown", onKey); document.body.classList.remove("sheet-open"); };
-  }, [open]);
-
-  const close = () => { setOpen(null); setPicked(false); };
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const close = useCallback(() => { setOpen(null); setPicked(false); }, []);
+  useModal(open !== null, sheetRef, close, 'input[name="item"]');
   const range = (i: number) => `第 ${i * 3 + 1}–${(i + 1) * 3} 章`;
 
   return (
@@ -56,7 +51,7 @@ export function Coupons({ token, coupons, items, toNext }: { token: string; coup
       </div>
 
       <div className="backdrop" onClick={close} />
-      <div className="sheet" role="dialog" aria-modal="true" aria-labelledby="redeem-title" aria-hidden={open === null}>
+      <div className="sheet" ref={sheetRef} role="dialog" aria-modal="true" aria-labelledby="redeem-title" aria-hidden={open === null} tabIndex={-1}>
         <div className="handle" />
         {state?.ok ? (
           <div className="success">

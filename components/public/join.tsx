@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useActionState, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useActionState, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { useModal } from "@/lib/use-modal";
 import { cancel, join, mine, type JoinState } from "@/app/p/[slug]/actions";
 import { loadMe, saveMe, type Me } from "@/lib/identity";
 import { People } from "./people";
@@ -75,21 +76,10 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
     return () => io.disconnect();
   }, []);
 
-  useEffect(() => {
-    document.body.classList.toggle("sheet-open", isOpen);
-    if (!isOpen) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
-    document.addEventListener("keydown", onKey);
-    const t = setTimeout(() => {
-      if (!matchMedia("(hover: hover)").matches) return;
-      const target = sheetRef.current?.querySelector<HTMLElement>(me.name ? 'input[name="level"]' : "#name");
-      target?.focus();
-    }, 260);
-    return () => { document.removeEventListener("keydown", onKey); clearTimeout(t); document.body.classList.remove("sheet-open"); };
-  }, [isOpen, me.name]);
+  const close = useCallback(() => setOpen(false), []);
+  useModal(isOpen, sheetRef, close, me.name ? 'input[name="level"]' : "#name");
 
   const open = () => { setView("form"); setShowContact(false); setOpen(true); };
-  const close = () => setOpen(false);
 
   const [state, formAction, pending] = useActionState<JoinState | null, FormData>(async (prev, fd) => {
     const res = await join(prev, fd);
@@ -134,7 +124,7 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
       </div>
 
       <div className="backdrop" onClick={close} />
-      <div className="sheet" ref={sheetRef} role="dialog" aria-modal="true" aria-labelledby="sheet-title" aria-hidden={!isOpen}>
+      <div className="sheet" ref={sheetRef} role="dialog" aria-modal="true" aria-labelledby="sheet-title" aria-hidden={!isOpen} tabIndex={-1}>
         <div className="handle" />
         {view === "form" && (
           <div>

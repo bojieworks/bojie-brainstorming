@@ -6,6 +6,7 @@ import { getProjectById } from "@/lib/projects";
 import { cancelMine, countInterests, findMine, friendByToken, publicNames, upsertInterest } from "@/lib/interests";
 import { notifyOwner } from "@/lib/email";
 import { LEVEL } from "@/lib/labels";
+import { clientIp, hit } from "@/lib/rate-limit";
 
 export type JoinState =
   | { ok: false; message: string }
@@ -37,6 +38,7 @@ export async function join(_prev: JoinState | null, formData: FormData): Promise
   });
   if (!parsed.success) return { ok: false, message: parsed.error.issues[0]?.message ?? "有東西沒填對" };
   const input = parsed.data;
+  if (!(await hit(`join:${await clientIp()}`, 5, 600))) return { ok: false, message: "按太多次了，休息十分鐘再試。" };
 
   const project = await getProjectById(input.projectId);
   if (!project || !project.published) return { ok: false, message: "找不到這個企劃" };

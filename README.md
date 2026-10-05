@@ -44,6 +44,8 @@ npm run dev
 
 沒有設 R2 變數時，圖片會存到本機 `UPLOAD_DIR`（本機開發用）。
 
+**Preview 部署**：build 只在 Production 跑 migration。`DATABASE_URL` 建議只勾 Production 環境；要測 Preview，在 Neon 開一個分支資料庫給 Preview 用，免得測試資料寫進正式資料庫。
+
 ### 其他主機（Zeabur、VPS）
 
 `npm start` 會先跑 migration 再啟動。圖片可以不用 R2，改掛 volume 並設 `UPLOAD_DIR`。

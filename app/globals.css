@@ -1,10 +1,3 @@
-@font-face {
-  font-family: "Huninn";
-  src: url("https://cdn.jsdelivr.net/gh/justfont/open-huninn-font@master/font/jf-openhuninn-2.1.ttf") format("truetype");
-  font-weight: 400 700;
-  font-display: swap;
-}
-
 :root {
   --paper: #f2f4f0;
   --surface: #fbfcfa;
@@ -21,10 +14,10 @@
   --cat-project: #a8a4c8;
   --cat-life: #d8b48f;
 
-  --display: "Huninn", var(--font-body), sans-serif;
+  --display: var(--font-display), var(--font-body), sans-serif;
   --body: var(--font-body), system-ui, sans-serif;
   --mono: var(--font-mono), ui-monospace, monospace;
-  --hand: var(--font-hand), "Huninn", cursive;
+  --hand: var(--font-hand), var(--font-display), cursive;
 
   --r: 6px;
   --max: 960px;
