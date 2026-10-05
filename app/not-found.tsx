@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+export const metadata = { title: "找不到這頁" };
+
 export default function NotFound() {
   return (
     <div className="wrap detail">

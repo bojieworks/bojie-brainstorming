@@ -43,10 +43,9 @@ function parseLinks(raw: string): ProjectLink[] {
     .split("\n")
     .map((l) => l.trim())
     .filter(Boolean)
-    .map((l) => {
+    .flatMap((l) => {
       const m = l.match(/^(.*?)\s*(https?:\/\/\S+)$/);
-      if (m) return { label: m[1].trim() || m[2], url: m[2] };
-      return { label: l, url: l };
+      return m ? [{ label: m[1].trim() || m[2], url: m[2] }] : [];
     });
 }
 

@@ -135,7 +135,7 @@ export function ProjectForm({ project, friends = [], categories }: Props) {
         <textarea className="input" id="fitFor" name="fitFor" defaultValue={project?.fitFor ?? ""} />
       </div>
       <div className="row">
-        <label htmlFor="links">參考連結 <small>一行一個，「名稱 網址」</small></label>
+        <label htmlFor="links">參考連結 <small>一行一個，「名稱 網址」，網址要 http 或 https 開頭</small></label>
         <textarea className="input" id="links" name="links" style={{ minHeight: 64 }} placeholder={"路線紀錄 https://…"} defaultValue={linksText} />
       </div>
       <ImageField name="coverUrl" label="封面圖" hint="沒有就用 emoji" initial={project?.coverUrl ?? ""} />

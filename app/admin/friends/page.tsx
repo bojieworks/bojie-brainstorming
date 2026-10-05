@@ -8,6 +8,7 @@ export default async function FriendsPage() {
   const items = await listFriends();
   return (
     <>
+      <h1 className="sr">朋友</h1>
       <section className="section" style={{ borderTop: 0 }}>
         <p className="label">建一個人</p>
         <form action={newFriend} className="form" style={{ maxWidth: 480 }}>

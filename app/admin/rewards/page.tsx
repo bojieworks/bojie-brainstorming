@@ -7,6 +7,7 @@ export default async function RewardsPage() {
   const items = await listRewardItems();
   return (
     <>
+      <h1 className="sr">券菜單</h1>
       <section className="section" style={{ borderTop: 0 }}>
         <p className="label">券菜單 · {items.length}</p>
         <p className="hint" style={{ margin: "0 0 12px" }}>朋友每集滿 3 章解鎖一張券，可以換這裡任何一項。</p>

@@ -23,6 +23,7 @@ export default async function Home(props: PageProps<"/">) {
         <nav><Link href="/about">關於</Link></nav>
       </header>
 
+      <main>
       <section className="intro">
         <h1 className="h1">
           <span>嗨，我是小傑。</span>
@@ -34,13 +35,13 @@ export default async function Home(props: PageProps<"/">) {
 
       {live.length > 0 && (
         <section className="section" id="live">
-          <p className="label">正在發生</p>
+          <h2 className="label">正在發生</h2>
           <div className="cards wide">{live.map((p, i) => <ProjectCard key={p.id} p={p} color={colors[p.category] ?? "var(--ink)"} index={i} />)}</div>
         </section>
       )}
 
       <section className="section" id="ideas">
-        <p className="label">想做的事 · <b>{ideas.length}</b></p>
+        <h2 className="label">想做的事 · <b>{ideas.length}</b></h2>
         <Suspense fallback={<div className="chips" />}><Chips categories={cats} /></Suspense>
         {ideas.length === 0 ? (
           <p className="empty-line">
@@ -53,7 +54,7 @@ export default async function Home(props: PageProps<"/">) {
       </section>
 
       <section className="section" id="done">
-        <p className="label">一起做過的</p>
+        <h2 className="label">一起做過的</h2>
         {done.length === 0 ? (
           <p className="empty-line">正在等第一件。</p>
         ) : (
@@ -79,6 +80,8 @@ export default async function Home(props: PageProps<"/">) {
           </>
         )}
       </section>
+
+      </main>
 
       <footer className="site">
         歡迎一起來玩

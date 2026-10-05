@@ -21,6 +21,7 @@ export default async function AdminHome() {
 
   return (
     <>
+      <h1 className="sr">待辦</h1>
       <section className="section" style={{ borderTop: 0 }}>
         <p className="label">還沒聯絡的人 · {pending.length}</p>
         {pending.length === 0 ? (

@@ -7,7 +7,9 @@ export const metadata = { title: "企劃" };
 export default async function ProjectsPage() {
   const items = await listProjectsAdmin();
   return (
-    <section className="section" style={{ borderTop: 0 }}>
+    <>
+    <h1 className="sr">企劃</h1>
+      <section className="section" style={{ borderTop: 0 }}>
       <p className="label">企劃 · {items.length}</p>
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
         <Link className="btn primary" href="/admin/projects/new" style={{ width: "auto", height: 40 }}>＋ 寫下一個想法</Link>
@@ -27,5 +29,6 @@ export default async function ProjectsPage() {
         </ul>
       )}
     </section>
+    </>
   );
 }

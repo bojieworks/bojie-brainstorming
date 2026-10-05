@@ -531,3 +531,13 @@ footer.site { padding: 32px 0 48px; font-size: 13px; color: var(--ink-2); border
   .howto-step { display: grid; grid-template-columns: 1fr 180px; align-items: center; gap: 12px; padding: 16px 20px; }
   .howto-cap { margin: 0; text-align: left; }
 }
+
+/* ---------- a11y / small-screen polish ---------- */
+h2.label { font-weight: 400; }
+.top nav a, .top .brand { display: inline-flex; align-items: center; min-height: 44px; }
+.kv dd a { padding-block: 4px; }
+.timeline .linkish, .todo .linkish { padding-block: 4px; }
+.form > *, .form .row, .grid2 > * { min-width: 0; }
+.form .hint { overflow-wrap: anywhere; }
+.admin-nav { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); padding-right: 24px; }
+@media (min-width: 640px) { .admin-nav { -webkit-mask-image: none; mask-image: none; padding-right: 0; } }

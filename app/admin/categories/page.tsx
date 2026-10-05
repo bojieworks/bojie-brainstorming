@@ -9,6 +9,7 @@ export default async function CategoriesPage() {
   const nextColor = DEFAULT_COLORS[items.length % DEFAULT_COLORS.length];
   return (
     <>
+      <h1 className="sr">分類</h1>
       <section className="section" style={{ borderTop: 0 }}>
         <p className="label">分類 · {items.length}</p>
         <p className="hint" style={{ margin: "0 0 12px" }}>有企劃在用的分類不能刪，先把那些企劃改到別的分類。</p>
