@@ -335,6 +335,22 @@ body.sheet-open { overflow: hidden; }
 .done-head { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
 .done-head .tick { width: 18px; height: 18px; }
 
+/* ---------- 換頁載入骨架（loading.tsx） ---------- */
+/* 延遲 .15s 才出現：伺服器很快回應時不會閃一下 */
+.sk-page { animation: sk-in var(--dur-base) var(--ease-out) .15s both; }
+.sk { display: block; background: var(--line); border-radius: var(--r); animation: sk-breathe 1.6s ease-in-out infinite; }
+/* 用 emoji 大小佔位：大方塊縮成小 emoji 的跳動，比小 emoji 展開成封面明顯 */
+.sk.emoji { width: 40px; height: 40px; margin: 0 0 14px; }
+.sk.title { height: 30px; width: 62%; }
+.sk.line { height: 16px; width: 44%; margin-top: 12px; }
+.sk.btn { height: 48px; margin-top: 20px; }
+.sk.row { height: 18px; width: 70%; }
+.specs .sk { height: 14px; width: 70%; margin: 4px 0; }
+.who .sk { height: 18px; width: 120px; }
+.todo .sk + .sk { margin-top: 8px; width: 45%; }
+@keyframes sk-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sk-breathe { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+
 /* ---------- utility ---------- */
 .hidden { display: none !important; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
@@ -570,7 +586,7 @@ h2.label { font-weight: 400; }
 /* ---------- 減少動態效果 ---------- */
 @media (prefers-reduced-motion: reduce) {
   .card, .tally.animate i, .tally i.new { animation: none !important; opacity: 1 !important; transform: none !important; }
-  .stamp-grid .seal.pop { animation: none !important; }
+  .stamp-grid .seal.pop, .sk, .sk-page { animation: none !important; }
   .sheet, .sticky, .backdrop, .card::before { transition: none !important; }
   .btn.primary .hand-ico { animation: none !important; }
   .btn.primary:active { transform: none; }
