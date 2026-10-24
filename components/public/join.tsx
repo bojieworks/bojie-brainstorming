@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useActionState, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, startTransition, useActionState, useCallback, useContext, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useHeightTransition, useModal } from "@/lib/use-modal";
 import { cancel, join, mine, type JoinState } from "@/app/p/[slug]/actions";
 import { loadMe, saveMe, type Me } from "@/lib/identity";
@@ -106,6 +106,13 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
     if (res.ok) { setCount(res.count); setMyInterest(null); setView("cancelled"); setTimeout(close, 1500); }
   };
 
+  // 自己送出而不用 <form action>：React 會在 action 結束後重設表單，送出失敗時已選的意願、打好的字會被清掉
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    startTransition(() => formAction(fd));
+  };
+
   const [levelPicked, setLevelPicked] = useState(false);
   const canSubmit = !pending && (levelPicked || !!myInterest);
 
@@ -136,7 +143,7 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
           <div>
             <h2 id="sheet-title">{myInterest ? "改一下你的想法" : "跟小傑說你也想"}</h2>
             <p className="sub">{title}</p>
-            <form action={formAction} noValidate onChange={(e) => { const t = e.target as unknown as { name?: string }; if (t.name === "level") setLevelPicked(true); }}>
+            <form onSubmit={onSubmit} noValidate onChange={(e) => { const t = e.target as unknown as { name?: string }; if (t.name === "level") setLevelPicked(true); }}>
               <input type="hidden" name="projectId" value={projectId} />
               <input type="hidden" name="clientKey" value={me.clientKey} />
               {me.friendToken && <input type="hidden" name="friendToken" value={me.friendToken} />}

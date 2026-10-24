@@ -15,10 +15,10 @@ export type JoinState =
 const schema = z.object({
   projectId: z.coerce.number().int(),
   clientKey: z.string().min(8).max(64),
-  name: z.string().trim().min(1, "名字要填").max(40),
-  level: z.enum(["curious", "serious"]),
-  note: z.string().trim().max(200).default(""),
-  contact: z.string().trim().max(120).default(""),
+  name: z.string().trim().min(1, "名字要填").max(40, "名字最多 40 個字"),
+  level: z.enum(["curious", "serious"], { error: "選一下有多想" }),
+  note: z.string().trim().max(200, "想說的話最多 200 個字").default(""),
+  contact: z.string().trim().max(120, "聯絡方式最多 120 個字").default(""),
   showName: z.boolean(),
   friendToken: z.string().max(64).optional(),
   website: z.string().max(0),
@@ -36,7 +36,12 @@ export async function join(_prev: JoinState | null, formData: FormData): Promise
     friendToken: formData.get("friendToken") || undefined,
     website: formData.get("website") ?? "",
   });
-  if (!parsed.success) return { ok: false, message: parsed.error.issues[0]?.message ?? "有東西沒填對" };
+  if (!parsed.success) {
+    // 只有使用者填的欄位才顯示原本的訊息；隱藏欄位出錯是頁面的問題，驗證工具的預設訊息是英文，不給使用者看
+    const issue = parsed.error.issues[0];
+    const userField = ["name", "level", "note", "contact"].includes(String(issue?.path[0]));
+    return { ok: false, message: userField ? issue.message : "頁面有點問題，重新整理後再試一次。" };
+  }
   const input = parsed.data;
   if (!(await hit(`join:${await clientIp()}`, 5, 600))) return { ok: false, message: "按太多次了，休息十分鐘再試。" };
 
