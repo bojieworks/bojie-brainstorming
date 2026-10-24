@@ -20,6 +20,17 @@
   --hand: var(--font-hand), var(--font-display), cursive;
 
   --r: 6px;
+
+  /* 動效：時間與曲線。新的動畫請沿用這些變數，並加進檔案最後的「減少動態效果」區塊 */
+  --dur-press: .12s;
+  --dur-fast: .15s;
+  --dur-base: .2s;
+  --dur-slow: .25s;
+  --dur-pop: .35s;
+  --ease-out: ease-out;
+  --ease-enter: cubic-bezier(.2,.8,.2,1);
+  --ease-exit: cubic-bezier(.4,0,1,1);
+  --ease-pop: cubic-bezier(.34,1.4,.64,1);
   --max: 960px;
   --read: 640px;
 }
@@ -92,7 +103,7 @@ img { display: block; max-width: 100%; }
 .chip {
   flex: 0 0 auto; height: 40px; padding: 0 14px; border-radius: var(--r);
   border: 1px solid var(--line); background: transparent; font-size: 14px;
-  display: inline-flex; align-items: center; gap: 8px; transition: background .15s, border-color .15s;
+  display: inline-flex; align-items: center; gap: 8px; transition: background var(--dur-fast), border-color var(--dur-fast);
 }
 .chip i { width: 8px; height: 8px; border-radius: 2px; background: var(--c, var(--ink)); }
 .chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
@@ -103,12 +114,12 @@ img { display: block; max-width: 100%; }
 .card {
   position: relative; display: block; background: var(--surface);
   border: 1px solid var(--line); border-radius: var(--r);
-  padding: 16px 16px 14px 20px; transition: background .15s;
-  animation: rise .35s ease-out both;
+  padding: 16px 16px 14px 20px; transition: background var(--dur-fast);
+  animation: rise var(--dur-pop) var(--ease-out) both;
 }
 .card::before {
   content: ""; position: absolute; left: -1px; top: -1px; bottom: -1px; width: 4px;
-  background: var(--cat, var(--ink)); border-radius: var(--r) 0 0 var(--r); transition: width .15s;
+  background: var(--cat, var(--ink)); border-radius: var(--r) 0 0 var(--r); transition: width var(--dur-fast);
 }
 .card:hover::before { width: 8px; }
 .card:active { background: var(--paper); }
@@ -152,15 +163,15 @@ img { display: block; max-width: 100%; }
 .tally.lg b { font-size: 13px; }
 .tally.faded { color: var(--ink-2); }
 .tally.empty svg { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 2 2; }
-.tally.animate i { opacity: 0; transform: translateY(4px); animation: pop .3s ease-out forwards; animation-delay: calc(var(--i) * 80ms); }
-.tally i.new { opacity: 0; transform: scale(.6); animation: pop .35s cubic-bezier(.34,1.4,.64,1) forwards; animation-delay: .25s; }
+.tally.animate i { opacity: 0; transform: translateY(4px); animation: pop .3s var(--ease-out) forwards; animation-delay: calc(var(--i) * 80ms); }
+.tally i.new { opacity: 0; transform: scale(.6); animation: pop var(--dur-pop) var(--ease-pop) forwards; animation-delay: .25s; }
 @keyframes pop { to { opacity: 1; transform: none; } }
 
 /* ---------- buttons ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   height: 48px; padding: 0 20px; border-radius: var(--r); border: 1px solid transparent;
-  font-weight: 500; font-size: 16px; transition: background .15s, border-color .15s; width: 100%;
+  font-weight: 500; font-size: 16px; transition: background var(--dur-fast), border-color var(--dur-fast); width: 100%;
 }
 .btn.primary { background: var(--hl); color: var(--ink); border-color: var(--hl); }
 .btn.primary:hover { background: var(--hl-2); border-color: var(--hl-2); }
@@ -240,10 +251,10 @@ img { display: block; max-width: 100%; }
   padding: 10px 20px calc(10px + env(safe-area-inset-bottom));
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
   transform: translateY(110%); visibility: hidden; pointer-events: none;
-  transition: transform .25s ease-out, visibility 0s .25s;
+  transition: transform var(--dur-slow) var(--ease-out), visibility 0s var(--dur-slow);
   box-shadow: 0 -8px 24px rgba(27,32,39,.06);
 }
-.sticky.show { transform: none; visibility: visible; pointer-events: auto; transition: transform .25s ease-out; }
+.sticky.show { transform: none; visibility: visible; pointer-events: auto; transition: transform var(--dur-slow) var(--ease-out); }
 .sticky .btn { width: auto; min-width: 140px; }
 .sticky .who { margin: 0; }
 .sticky .closed-note { border: 0; padding: 0; text-align: left; flex: 1; }
@@ -252,18 +263,18 @@ img { display: block; max-width: 100%; }
 /* ---------- sheet ---------- */
 .backdrop {
   position: fixed; inset: 0; background: rgba(27,32,39,.35); z-index: 30;
-  opacity: 0; pointer-events: none; transition: opacity .2s;
+  opacity: 0; pointer-events: none; transition: opacity var(--dur-base);
 }
 .sheet {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 31;
   background: var(--surface); border-radius: 12px 12px 0 0;
   padding: 10px 20px calc(24px + env(safe-area-inset-bottom));
-  transform: translateY(100%); visibility: hidden; transition: transform .25s ease-out, visibility 0s .25s;
+  transform: translateY(100%); visibility: hidden; transition: transform var(--dur-slow) var(--ease-out), visibility 0s var(--dur-slow);
   max-height: 92vh; max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
   box-shadow: 0 -12px 40px rgba(27,32,39,.12);
 }
 body.sheet-open .backdrop { opacity: 1; pointer-events: auto; }
-body.sheet-open .sheet { transform: none; visibility: visible; transition: transform .25s ease-out; }
+body.sheet-open .sheet { transform: none; visibility: visible; transition: transform var(--dur-slow) var(--ease-out); }
 body.sheet-open { overflow: hidden; }
 .sheet .handle { width: 36px; height: 4px; border-radius: 2px; background: var(--line); margin: 0 auto 16px; }
 .sheet h2 { font-family: var(--display); font-weight: 700; font-size: 20px; margin: 0; line-height: 1.3; }
@@ -283,15 +294,15 @@ body.sheet-open { overflow: hidden; }
 .seg span {
   display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
   height: 60px; padding: 0 14px; border: 1px solid var(--line); border-radius: var(--r);
-  font-size: 15px; line-height: 1.35; transition: border-color .15s; background: var(--paper);
+  font-size: 15px; line-height: 1.35; transition: border-color var(--dur-fast); background: var(--paper);
 }
 .seg span small { color: var(--ink-2); font-size: 13px; }
 .seg input:checked + span { border: 2px solid var(--ink); padding: 0 13px; }
 .seg input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 3px; }
 .toggle { display: flex; align-items: center; gap: 10px; margin-top: 18px; font-size: 14px; cursor: pointer; }
 .toggle input { position: absolute; opacity: 0; }
-.toggle i { width: 36px; height: 22px; border-radius: 11px; background: var(--line); position: relative; transition: background .15s; flex: 0 0 auto; }
-.toggle i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .15s; }
+.toggle i { width: 36px; height: 22px; border-radius: 11px; background: var(--line); position: relative; transition: background var(--dur-fast); flex: 0 0 auto; }
+.toggle i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform var(--dur-fast); }
 .toggle input:checked + i { background: var(--ink); }
 .toggle input:checked + i::after { transform: translateX(14px); }
 .toggle input:focus-visible + i { outline: 2px solid var(--ink); outline-offset: 3px; }
@@ -308,7 +319,7 @@ body.sheet-open { overflow: hidden; }
 .sheet .success .back { margin: 14px 0 0; }
 @media (min-width: 960px) {
   .sheet { left: 50%; right: auto; bottom: auto; top: 50%; width: 420px; border-radius: var(--r);
-    transform: translate(-50%, -46%); opacity: 0; transition: transform .2s ease-out, opacity .2s; padding: 24px 24px 24px; }
+    transform: translate(-50%, -46%); opacity: 0; transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-base); padding: 24px 24px 24px; }
   body.sheet-open .sheet { transform: translate(-50%, -50%); opacity: 1; visibility: visible; }
   .sheet .handle { display: none; }
 }
@@ -329,11 +340,6 @@ body.sheet-open { overflow: hidden; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 footer.site { padding: 32px 0 48px; font-size: 13px; color: var(--ink-2); border-top: 1px solid var(--line); margin-top: 24px; }
 
-@media (prefers-reduced-motion: reduce) {
-  .card, .tally.animate i, .tally i.new { animation: none !important; opacity: 1 !important; transform: none !important; }
-  .sheet, .sticky, .backdrop, .card::before { transition: none !important; }
-}
-
 /* ---------- 集章卡 ---------- */
 .stamps { margin-top: 24px; }
 .stamp-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; max-width: 400px; }
@@ -351,7 +357,7 @@ footer.site { padding: 32px 0 48px; font-size: 13px; color: var(--ink-2); border
 .seal.empty .n { font-family: var(--mono); font-size: 12px; color: var(--line); }
 .seal:nth-child(3n+1) { --r: -3deg; } .seal:nth-child(3n+2) { --r: 2deg; } .seal:nth-child(3n+3) { --r: -1deg; }
 .seal.empty { --r: 0deg; }
-.stamp-grid .seal.pop { animation: pop .35s cubic-bezier(.34,1.4,.64,1) both; animation-delay: calc(var(--i) * 90ms); }
+.stamp-grid .seal.pop { animation: pop var(--dur-pop) var(--ease-pop) both; animation-delay: calc(var(--i) * 90ms); }
 .stamp-note { margin: 16px 0 0; }
 .big-seal { width: 84px; margin: 0 auto 14px; --r: -3deg; }
 .big-seal .e { font-size: 34px; }
@@ -513,14 +519,11 @@ footer.site { padding: 32px 0 48px; font-size: 13px; color: var(--ink-2); border
 /* ---------- 我也想：舉手 ---------- */
 .btn .hand-ico { width: 20px; height: 20px; margin-left: 2px; transform-origin: 70% 95%; }
 .btn.primary:hover .hand-ico, .btn.primary:focus-visible .hand-ico, .btn.primary:active .hand-ico { animation: wave .7s ease-in-out; }
-.btn.primary { transition: background .15s, border-color .15s, transform .12s; }
+.btn.primary { transition: background var(--dur-fast), border-color var(--dur-fast), transform var(--dur-press); }
 .btn.primary:active { transform: scale(.985); }
 @keyframes wave {
   0% { transform: rotate(0); } 20% { transform: rotate(16deg); } 40% { transform: rotate(-10deg); }
   60% { transform: rotate(10deg); } 80% { transform: rotate(-5deg); } 100% { transform: rotate(0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .btn.primary .hand-ico { animation: none !important; }
 }
 
 /* ---------- 集章圖解 ---------- */
@@ -563,3 +566,12 @@ h2.label { font-weight: 400; }
 .form .hint { overflow-wrap: anywhere; }
 .admin-nav { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); padding-right: 24px; }
 @media (min-width: 640px) { .admin-nav { -webkit-mask-image: none; mask-image: none; padding-right: 0; } }
+
+/* ---------- 減少動態效果 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .card, .tally.animate i, .tally i.new { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .stamp-grid .seal.pop { animation: none !important; }
+  .sheet, .sticky, .backdrop, .card::before { transition: none !important; }
+  .btn.primary .hand-ico { animation: none !important; }
+  .btn.primary:active { transform: none; }
+}
