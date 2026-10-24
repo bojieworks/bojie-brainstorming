@@ -210,7 +210,8 @@ img { display: block; max-width: 100%; }
 }
 .block { border-top: 1px solid var(--line); margin-top: 32px; padding-top: 20px; }
 .block .label { margin-bottom: 10px; }
-.why { font-size: 17px; line-height: 1.8; margin: 0; }
+.why { font-size: 17px; line-height: 1.8; margin: 0; text-align: justify; }
+.fit { margin: 0; text-align: justify; }
 .why p, .why ul, .why ol { margin: 0 0 1em; }
 .why ul, .why ol { padding-left: 1.4em; }
 .why li + li { margin-top: .25em; }

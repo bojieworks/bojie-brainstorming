@@ -174,7 +174,7 @@ export default async function ProjectPage(props: PageProps<"/p/[slug]">) {
             {p.fitFor && (
               <section className="block">
                 <p className="label">適合什麼樣的人</p>
-                <p style={{ margin: 0 }}>{p.fitFor}</p>
+                <p className="fit">{p.fitFor}</p>
               </section>
             )}
             <Details />
