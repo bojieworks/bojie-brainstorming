@@ -3,7 +3,7 @@
 import { requireAdmin } from "@/lib/auth/require";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { addStamp, createFriend, deleteFriend, deleteStamp, fulfillRedemption, renameFriend } from "@/lib/friends";
+import { addStamp, createFriend, deleteFriend, deleteStamp, fulfillRedemption, renameFriend, unfulfillRedemption } from "@/lib/friends";
 import { getProjectById } from "@/lib/projects";
 import { todayISO } from "@/lib/format";
 
@@ -52,6 +52,14 @@ export async function removeStamp(friendId: number, stampId: number) {
 export async function markFulfilled(id: number, friendId: number) {
   await requireAdmin();
   await fulfillRedemption(id);
+  revalidatePath("/admin");
+  revalidatePath(`/admin/friends/${friendId}`);
+}
+
+/** 點錯「已兌現」時改回等兌現 */
+export async function unmarkFulfilled(id: number, friendId: number) {
+  await requireAdmin();
+  await unfulfillRedemption(id);
   revalidatePath("/admin");
   revalidatePath(`/admin/friends/${friendId}`);
 }

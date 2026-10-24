@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useCallback, useEffect, useRef, useState } from "react";
+import { startTransition, useActionState, useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { useHeightTransition, useModal } from "@/lib/use-modal";
 import { FormError } from "@/components/public/form-error";
 import { saveMe } from "@/lib/identity";
@@ -32,6 +32,13 @@ export function Coupons({ token, coupons, items, toNext, newFrom = Infinity }: {
   const close = useCallback(() => { setOpen(null); setPicked(false); }, []);
   useModal(open !== null, sheetRef, close, 'input[name="item"]');
   useHeightTransition(sheetRef, state?.ok ? "ok" : "form");
+
+  // 自己送出而不用 <form action>：React 會在 action 結束後重設表單，送出失敗時已選的項目會被清掉
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    startTransition(() => action(fd));
+  };
 
   return (
     <>
@@ -74,7 +81,7 @@ export function Coupons({ token, coupons, items, toNext, newFrom = Infinity }: {
           <div>
             <h2 id="redeem-title">這張券要換什麼</h2>
             <p className="sub">選一個，小傑會來找你約。</p>
-            <form action={action} onChange={() => setPicked(true)}>
+            <form onSubmit={onSubmit} onChange={() => setPicked(true)}>
               <input type="hidden" name="token" value={token} />
               <input type="hidden" name="couponIndex" value={open ?? ""} />
               <div className="field">

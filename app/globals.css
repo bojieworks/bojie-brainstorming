@@ -456,6 +456,15 @@ footer.site { padding: 32px 0 48px; font-size: 13px; color: var(--ink-2); border
 /* 錯誤訊息放在那一列的內容欄下方：form 用 display: contents，裡面的元素直接排進 li 的格線 */
 .todo .todo-check { display: contents; }
 .todo .todo-err { grid-column: 2 / -1; grid-row: 2; margin: -4px 0 0; font-size: 13px; color: #9a3b2e; }
+.todo-hint { font-size: 13px; color: var(--ink-2); margin: 10px 0 0; }
+/* 後台的「復原」提示：畫面下方置中 */
+.undo-toast { position: fixed; left: 0; right: 0; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 40; display: flex; justify-content: center; pointer-events: none; }
+.undo-inner { pointer-events: auto; display: flex; align-items: center; gap: 12px; max-width: calc(100% - 32px);
+  background: var(--ink); color: var(--paper); border-radius: var(--r); padding: 8px 8px 8px 16px; font-size: 14px;
+  box-shadow: 0 8px 24px rgba(27,32,39,.18); animation: toast-in var(--dur-base) var(--ease-enter) both; }
+.undo-inner button { flex: 0 0 auto; min-height: 36px; padding: 0 10px; border: 0; border-radius: var(--r); background: transparent; color: var(--hl); font-weight: 500; }
+.undo-inner button:disabled { color: var(--line); }
+@keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 @keyframes row-err { from { box-shadow: inset 3px 0 0 #9a3b2e; } to { box-shadow: inset 3px 0 0 transparent; } }
 .mini-btn { height: 32px; padding: 0 10px; border-radius: var(--r); border: 1px solid var(--line); background: transparent; font-size: 13px; }
 .mini-btn:hover { border-color: var(--ink); }
@@ -612,7 +621,7 @@ h2.label { font-weight: 400; }
 /* ---------- 減少動態效果 ---------- */
 @media (prefers-reduced-motion: reduce) {
   .card, .tally.animate i, .tally i.new { animation: none !important; opacity: 1 !important; transform: none !important; }
-  .stamp-grid .seal.stamp-in, .coupon.coupon-in, .sk, .sk-page, .todo li, .sheet .success, .form-err { animation: none !important; }
+  .stamp-grid .seal.stamp-in, .coupon.coupon-in, .sk, .sk-page, .todo li, .sheet .success, .form-err, .undo-inner { animation: none !important; }
   .reveal { transition: none !important; }
   .check, .check svg path, .todo li { transition: none !important; }
   .sheet, .sticky, .backdrop, .card::before { transition: none !important; }

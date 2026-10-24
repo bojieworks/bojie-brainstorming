@@ -8,7 +8,7 @@ import { ConfirmButton } from "@/components/admin/confirm-button";
 import { TodoCheck } from "@/components/admin/todo-check";
 import { listPendingRedemptions } from "@/lib/friends";
 import { couponRange } from "@/lib/coupons";
-import { markFulfilled } from "./friends/actions";
+import { markFulfilled, unmarkFulfilled } from "./friends/actions";
 
 export const metadata = { title: "待辦" };
 
@@ -32,10 +32,11 @@ export default async function AdminHome() {
           <ul className="todo">
             {pending.map((i) => {
               const done = markInterest.bind(null, i.projectId, i.id, "contacted");
+              const undo = markInterest.bind(null, i.projectId, i.id, "new");
               const spam = markInterest.bind(null, i.projectId, i.id, "spam");
               return (
                 <li key={i.id}>
-                  <TodoCheck action={done} pressed={false} label="標記已聯絡" leave />
+                  <TodoCheck action={done} pressed={false} label="標記已聯絡" leave undo={{ message: `${i.name} 標成已聯絡`, action: undo }} />
                   <div>
                     <span className="who">
                       <b className="person">{i.name}</b>
@@ -56,6 +57,7 @@ export default async function AdminHome() {
             })}
           </ul>
         )}
+        <p className="todo-hint">勾掉的人不會消失，在各企劃的編輯頁看得到，也可以在那裡取消勾選。</p>
       </section>
       <section className="section">
         <p className="label">等兌現的券 · {redemptionsPending.length}</p>
@@ -65,9 +67,10 @@ export default async function AdminHome() {
           <ul className="todo">
             {redemptionsPending.map((r) => {
               const done = markFulfilled.bind(null, r.id, r.friendId);
+              const undo = unmarkFulfilled.bind(null, r.id, r.friendId);
               return (
                 <li key={r.id}>
-                  <TodoCheck action={done} pressed={false} label="標記已兌現" leave />
+                  <TodoCheck action={done} pressed={false} label="標記已兌現" leave undo={{ message: `${r.friend.name}的「${r.item.title}」標成已兌現`, action: undo }} />
                   <div>
                     <span className="who"><b className="person">{r.friend.name}</b></span>
                     <div className="what">想換 <b>{r.item.title}</b></div>
@@ -78,6 +81,7 @@ export default async function AdminHome() {
             })}
           </ul>
         )}
+        <p className="todo-hint">已兌現的券在朋友頁看得到，點錯可以在那裡改回來。</p>
       </section>
     </>
   );

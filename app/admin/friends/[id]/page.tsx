@@ -7,7 +7,7 @@ import { LEVEL } from "@/lib/labels";
 import { monthDay, todayISO, yearMonth } from "@/lib/format";
 import { CopyText } from "@/components/admin/copy-text";
 import { ConfirmButton } from "@/components/admin/confirm-button";
-import { manualStamp, markFulfilled, removeFriend, removeStamp, updateFriendName } from "../actions";
+import { manualStamp, markFulfilled, removeFriend, removeStamp, unmarkFulfilled, updateFriendName } from "../actions";
 
 export async function generateMetadata(props: PageProps<"/admin/friends/[id]">) {
   const { id } = await props.params;
@@ -125,7 +125,13 @@ export default async function FriendPage(props: PageProps<"/admin/friends/[id]">
                   </div>
                 );
               }
-              return <div key={c.index} className="coupon used"><div><div className="name">小傑券 · {r.item.title}</div><div className="from">{from}</div></div><span className="state">已兌現 {monthDay(r.fulfilledAt)}</span></div>;
+              const undo = unmarkFulfilled.bind(null, r.id, friendId);
+              return (
+                <div key={c.index} className="coupon used">
+                  <div><div className="name">小傑券 · {r.item.title}</div><div className="from">{from} · 已兌現 {monthDay(r.fulfilledAt)}</div></div>
+                  <form action={undo}><ConfirmButton className="mini-btn" message={`把這張券改回「等兌現」？${f.name}的集章卡也會跟著改回來。`}>改回未兌現</ConfirmButton></form>
+                </div>
+              );
             })}
             <div className="coupon locked" style={{ marginTop: 10 }}><div><div className="name">下一張</div></div><span className="state">還差 {card.toNext} 章</span></div>
           </section>

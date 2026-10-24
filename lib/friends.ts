@@ -85,6 +85,10 @@ export async function fulfillRedemption(id: number) {
   await db.update(redemptions).set({ fulfilledAt: new Date() }).where(eq(redemptions.id, id));
 }
 
+export async function unfulfillRedemption(id: number) {
+  await db.update(redemptions).set({ fulfilledAt: null }).where(eq(redemptions.id, id));
+}
+
 export async function listPendingRedemptions() {
   return db.query.redemptions.findMany({
     where: isNull(redemptions.fulfilledAt),

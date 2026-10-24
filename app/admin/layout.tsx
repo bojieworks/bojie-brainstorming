@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AdminNav } from "@/components/admin/admin-nav";
+import { UndoProvider } from "@/components/admin/undo-toast";
 import { logout } from "./login/actions";
 
 export default function AdminLayout({ children }: LayoutProps<"/admin">) {
@@ -13,7 +14,7 @@ export default function AdminLayout({ children }: LayoutProps<"/admin">) {
         </nav>
       </header>
       <AdminNav />
-      {children}
+      <UndoProvider>{children}</UndoProvider>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useOptimistic, useRef, useState } from "react";
+import { useUndo } from "./undo-toast";
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -15,9 +16,20 @@ function collapse(row: HTMLElement) {
   return { cancel: () => { anim.cancel(); row.style.overflow = ""; } };
 }
 
-/** 按下去立刻打勾，不等伺服器；存失敗就恢復原狀並提示。leave：完成後這一列會從清單消失（待辦頁）。 */
-export function TodoCheck({ action, pressed, label, leave = false }: { action: () => Promise<void>; pressed: boolean; label: string; leave?: boolean }) {
+type Props = {
+  action: () => Promise<void>;
+  pressed: boolean;
+  label: string;
+  /** 完成後這一列會從清單消失（待辦頁） */
+  leave?: boolean;
+  /** 有給的話，完成後畫面下方出現「復原」提示 */
+  undo?: { message: string; action: () => Promise<void> };
+};
+
+/** 按下去立刻打勾，不等伺服器；存失敗就恢復原狀並提示。 */
+export function TodoCheck({ action, pressed, label, leave = false, undo }: Props) {
   const [on, setOn] = useOptimistic(pressed);
+  const showUndo = useUndo();
   const [failed, setFailed] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
   return (
@@ -29,6 +41,7 @@ export function TodoCheck({ action, pressed, label, leave = false }: { action: (
       try {
         // 收合動畫跑完前先不換掉清單，不然那一列會在半途突然消失
         await Promise.all([action(), leave ? wait(450) : null]);
+        if (undo) showUndo(undo.message, undo.action);
       } catch {
         anim?.cancel();
         setFailed(true);
