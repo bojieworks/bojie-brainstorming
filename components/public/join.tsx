@@ -17,7 +17,7 @@ const HandIcon = () => (
 );
 const JoinLabel = () => <>我也想 <HandIcon /></>;
 
-type Mine = { level: "curious" | "serious"; name: string; note: string; showName: boolean } | null;
+type Mine = { level: "curious" | "serious"; name: string; note: string; contact: string; showName: boolean } | null;
 type Ctx = {
   count: number;
   names: string[];
@@ -82,7 +82,8 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
   const close = useCallback(() => setOpen(false), []);
   useModal(isOpen, sheetRef, close, me.name ? 'input[name="level"]' : "#name");
 
-  const open = () => { setView("form"); setShowContact(false); setOpen(true); };
+  // 之前留過聯絡方式就直接展開，送出時才不會用空白蓋掉
+  const open = () => { setView("form"); setShowContact(!!myInterest?.contact); setOpen(true); };
 
   const [state, formAction, pending] = useActionState<JoinState | null, FormData>(async (prev, fd) => {
     const res = await join(prev, fd);
@@ -92,7 +93,7 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
       setMe((m) => ({ ...m, name }));
       setCount(res.count);
       setNames(res.names);
-      setMyInterest({ level: res.level, name, note: String(fd.get("note") ?? ""), showName: fd.get("showName") === "on" });
+      setMyInterest({ level: res.level, name, note: String(fd.get("note") ?? ""), contact: String(fd.get("contact") ?? ""), showName: fd.get("showName") === "on" });
       setView("ok");
     }
     return res;
@@ -155,7 +156,7 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
               </div>
               <div className={`field${showContact ? "" : " hidden"}`}>
                 <label htmlFor="contact">怎麼找你 <small>IG、LINE ID 或 email 都可以</small></label>
-                <input className="input" id="contact" name="contact" type="text" />
+                <input className="input" id="contact" name="contact" type="text" defaultValue={myInterest?.contact ?? ""} />
               </div>
               <label className="toggle"><input type="checkbox" name="showName" defaultChecked={myInterest?.showName ?? false} /><i />讓其他人看到我的名字</label>
               <div className="actions">

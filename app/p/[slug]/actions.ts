@@ -80,5 +80,5 @@ export async function cancel(projectId: number, clientKey: string, friendToken?:
 export async function mine(projectId: number, clientKey: string, friendToken?: string) {
   const friend = await friendByToken(friendToken);
   const m = await findMine(projectId, clientKey, friend?.id);
-  return m ? { level: m.level, name: m.name, note: m.note, showName: m.showName } : null;
+  return m ? { level: m.level, name: m.name, note: m.note, contact: m.contact, showName: m.showName } : null;
 }
