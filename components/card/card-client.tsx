@@ -11,10 +11,18 @@ export function CardIdentity({ name, token }: { name: string; token: string }) {
   return null;
 }
 
+/** 記下這次看到了哪些章，下次打開時只有新的章會蓋下去。 */
+export function MarkSeen({ cookie, token, ids }: { cookie: string; token: string; ids: number[] }) {
+  useEffect(() => {
+    document.cookie = `${cookie}=${ids.join(".")}; path=/card/${token}; max-age=31536000; samesite=lax`;
+  }, [cookie, token, ids]);
+  return null;
+}
+
 type Coupon = { index: number; state: "available" | "pending" | "used"; itemTitle: string | null; fulfilledAt: string | null };
 type Item = { id: number; title: string; description: string };
 
-export function Coupons({ token, coupons, items, toNext }: { token: string; coupons: Coupon[]; items: Item[]; toNext: number }) {
+export function Coupons({ token, coupons, items, toNext, newFrom = Infinity }: { token: string; coupons: Coupon[]; items: Item[]; toNext: number; newFrom?: number }) {
   const [open, setOpen] = useState<number | null>(null);
   const [picked, setPicked] = useState(false);
   const [state, action, pending] = useActionState<RedeemState, FormData>(redeem, null);
@@ -27,7 +35,7 @@ export function Coupons({ token, coupons, items, toNext }: { token: string; coup
     <>
       {coupons.map((c) => {
         if (c.state === "available") return (
-          <div key={c.index} className="coupon">
+          <div key={c.index} className={c.index >= newFrom ? "coupon coupon-in" : "coupon"}>
             <div><div className="name">小傑券</div><div className="from">{couponRange(c.index)}</div></div>
             <button className="btn primary" onClick={() => { setPicked(false); setOpen(c.index); }}>兌換</button>
           </div>

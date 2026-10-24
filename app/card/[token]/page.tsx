@@ -1,9 +1,12 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { friendCard, getFriendByToken } from "@/lib/friends";
 import { STAMPS_PER_COUPON } from "@/lib/coupons";
 import { monthDay, yearMonth } from "@/lib/format";
-import { CardIdentity, Coupons } from "@/components/card/card-client";
+import { CardIdentity, Coupons, MarkSeen } from "@/components/card/card-client";
+
+const SEEN_COOKIE = "card_seen";
 
 export async function generateMetadata(props: PageProps<"/card/[token]">) {
   const { token } = await props.params;
@@ -20,9 +23,17 @@ export default async function CardPage(props: PageProps<"/card/[token]">) {
   const slots = Math.max(STAMPS_PER_COUPON, Math.ceil(total / STAMPS_PER_COUPON) * STAMPS_PER_COUPON);
   const toNext = card.toNext;
 
+  // 上次看過哪些章存在 cookie（只在這張卡的網址下），伺服器就能直接標出新的章，畫面第一次出現就開始蓋章，不會先閃一下。
+  // 第一次打開沒有紀錄，全部當成看過，不播放
+  const seenRaw = (await cookies()).get(SEEN_COOKIE)?.value;
+  const seen = new Set((seenRaw ?? "").split(".").map(Number));
+  const fresh = seenRaw === undefined ? [] : card.stamps.filter((s) => !seen.has(s.id)).map((s) => s.id);
+  const newCouponFrom = Math.floor((total - fresh.length) / STAMPS_PER_COUPON);
+
   return (
     <div className="wrap detail">
       <CardIdentity name={f.name} token={f.token} />
+      <MarkSeen cookie={SEEN_COOKIE} token={f.token} ids={card.stamps.map((s) => s.id)} />
       <header className="top">
         <Link className="brand back" href="/">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
@@ -40,9 +51,12 @@ export default async function CardPage(props: PageProps<"/card/[token]">) {
               const s = card.stamps[i];
               if (!s) return <span key={i} className="seal empty" aria-hidden="true"><span className="n">{i + 1}</span></span>;
               const inner = <><span className="e" aria-hidden="true">{s.emoji}</span><span className="d">{yearMonth(s.date)}</span></>;
+              const n = fresh.indexOf(s.id);
+              const cls = n >= 0 ? "seal stamp-in" : "seal";
+              const style = n >= 0 ? { ["--n" as string]: n } : undefined;
               return s.project?.published
-                ? <Link key={s.id} className="seal pop" style={{ ["--i" as string]: i }} href={`/p/${s.project.slug}`} title={s.label}>{inner}</Link>
-                : <span key={s.id} className="seal pop" style={{ ["--i" as string]: i }} title={s.label}>{inner}</span>;
+                ? <Link key={s.id} className={cls} style={style} href={`/p/${s.project.slug}`} title={s.label}>{inner}</Link>
+                : <span key={s.id} className={cls} style={style} title={s.label}>{inner}</span>;
             })}
           </div>
           <p className="hand stamp-note">
@@ -57,7 +71,7 @@ export default async function CardPage(props: PageProps<"/card/[token]">) {
             state: !c.redemption ? "available" : c.redemption.fulfilledAt ? "used" : "pending",
             itemTitle: c.redemption?.item.title ?? null,
             fulfilledAt: c.redemption?.fulfilledAt ? monthDay(c.redemption.fulfilledAt) : null,
-          }))} items={card.items.map((i) => ({ id: i.id, title: i.title, description: i.description }))} toNext={toNext} />
+          }))} items={card.items.map((i) => ({ id: i.id, title: i.title, description: i.description }))} toNext={toNext} newFrom={newCouponFrom} />
           <p className="muted" style={{ fontSize: 14, margin: "12px 0 0" }}>每集滿 {STAMPS_PER_COUPON} 章解鎖一張。章不會被扣掉，券不會過期。</p>
         </section>
 
