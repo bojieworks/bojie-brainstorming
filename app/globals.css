@@ -114,10 +114,12 @@ img { display: block; max-width: 100%; }
 .card:active { background: var(--paper); }
 .card .cover { aspect-ratio: 16/9; border-radius: var(--r); overflow: hidden; margin: 0 0 14px; background: var(--line); }
 .card .cover img { width: 100%; height: 100%; object-fit: cover; }
-.card .row1 { display: flex; align-items: flex-start; gap: 10px; }
-.card .emoji { font-size: 26px; line-height: 1.2; flex: 0 0 auto; }
-.card .title { font-family: var(--display); font-weight: 700; font-size: 20px; line-height: 1.3; margin: 0; flex: 1; }
-.card .stamp { margin-top: 3px; }
+/* emoji 與狀態章各放在一個標題行高的框裡置中，對齊標題第一行（標題換行也不會跑掉） */
+.card .row1 { --line: 26px; display: flex; align-items: flex-start; gap: 10px; }
+.card .emoji, .card .aside { height: var(--line); display: flex; align-items: center; flex: 0 0 auto; }
+.card .emoji { font-size: 26px; line-height: 1; }
+.card .aside:empty { display: none; }
+.card .title { font-family: var(--display); font-weight: 700; font-size: 20px; line-height: var(--line); margin: 0; flex: 1; }
 .card .one { color: var(--ink-2); margin: 6px 0 0; font-size: 15px; line-height: 1.6;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .card .foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 12px; }

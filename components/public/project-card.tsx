@@ -21,7 +21,7 @@ export function ProjectCard({ p, color, index = 0 }: { p: ProjectWithCount; colo
       <div className="row1">
         <span className="emoji" aria-hidden="true">{p.emoji}</span>
         <h3 className="title">{p.title}</h3>
-        <StatusStamp status={p.status} />
+        <span className="aside"><StatusStamp status={p.status} /></span>
       </div>
       {p.tagline && <p className="one">{p.tagline}</p>}
       <div className="foot">
