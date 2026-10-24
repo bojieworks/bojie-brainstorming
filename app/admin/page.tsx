@@ -5,6 +5,7 @@ import { LEVEL } from "@/lib/labels";
 import { relative } from "@/lib/format";
 import { markInterest } from "./projects/actions";
 import { ConfirmButton } from "@/components/admin/confirm-button";
+import { TodoCheck } from "@/components/admin/todo-check";
 import { listPendingRedemptions } from "@/lib/friends";
 import { couponRange } from "@/lib/coupons";
 import { markFulfilled } from "./friends/actions";
@@ -34,11 +35,7 @@ export default async function AdminHome() {
               const spam = markInterest.bind(null, i.projectId, i.id, "spam");
               return (
                 <li key={i.id}>
-                  <form action={done}>
-                    <button className="check" type="submit" aria-pressed={false} aria-label="標記已聯絡">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12l5 5L20 7" /></svg>
-                    </button>
-                  </form>
+                  <TodoCheck action={done} pressed={false} label="標記已聯絡" leave />
                   <div>
                     <span className="who">
                       <b className="person">{i.name}</b>
@@ -70,11 +67,7 @@ export default async function AdminHome() {
               const done = markFulfilled.bind(null, r.id, r.friendId);
               return (
                 <li key={r.id}>
-                  <form action={done}>
-                    <button className="check" type="submit" aria-pressed={false} aria-label="標記已兌現">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12l5 5L20 7" /></svg>
-                    </button>
-                  </form>
+                  <TodoCheck action={done} pressed={false} label="標記已兌現" leave />
                   <div>
                     <span className="who"><b className="person">{r.friend.name}</b></span>
                     <div className="what">想換 <b>{r.item.title}</b></div>

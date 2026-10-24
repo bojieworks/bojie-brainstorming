@@ -432,12 +432,21 @@ footer.site { padding: 32px 0 48px; font-size: 13px; color: var(--ink-2); border
 .todo .note { font-size: 14px; color: var(--ink-2); margin: 4px 0 0; }
 .todo .tag { white-space: nowrap; display: inline-block; font-family: var(--mono); font-size: 11px; border: 1px solid var(--ink); border-radius: 3px; padding: 2px 5px; margin-left: 6px; vertical-align: 1px; }
 .todo .tag.serious { background: var(--ink); color: var(--paper); }
-.check { width: 24px; height: 24px; border: 1.5px solid var(--ink); border-radius: 6px; background: transparent; display: inline-flex; align-items: center; justify-content: center; margin-top: 2px; }
-.check svg { width: 14px; height: 14px; opacity: 0; }
+.check { width: 24px; height: 24px; border: 1.5px solid var(--ink); border-radius: 6px; background: transparent; display: inline-flex; align-items: center; justify-content: center; margin-top: 2px; transition: background var(--dur-press), border-color var(--dur-press); }
+.check svg { width: 14px; height: 14px; stroke: var(--paper); }
+/* 勾號用描邊畫出來（path 設了 pathLength=1） */
+.check svg path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .16s var(--ease-enter); }
 .check[aria-pressed="true"] { background: var(--ink); }
-.check[aria-pressed="true"] svg { opacity: 1; stroke: var(--paper); }
-.todo li.done-row { opacity: .45; }
-.todo li.done-row .who { text-decoration: line-through; }
+.check[aria-pressed="true"] svg path { stroke-dashoffset: 0; }
+.check[data-failed] { border-color: #9a3b2e; }
+.todo li { transition: opacity var(--dur-fast); }
+.todo li.done-row, .todo li:has(.check[aria-pressed="true"]) { opacity: .45; }
+.todo li.done-row .who, .todo li:has(.check[aria-pressed="true"]) .who { text-decoration: line-through; }
+.todo li:has(.check[data-failed]) { animation: row-err .8s var(--ease-out); }
+/* 錯誤訊息放在那一列的內容欄下方：form 用 display: contents，裡面的元素直接排進 li 的格線 */
+.todo .todo-check { display: contents; }
+.todo .todo-err { grid-column: 2 / -1; grid-row: 2; margin: -4px 0 0; font-size: 13px; color: #9a3b2e; }
+@keyframes row-err { from { box-shadow: inset 3px 0 0 #9a3b2e; } to { box-shadow: inset 3px 0 0 transparent; } }
 .mini-btn { height: 32px; padding: 0 10px; border-radius: var(--r); border: 1px solid var(--line); background: transparent; font-size: 13px; }
 .mini-btn:hover { border-color: var(--ink); }
 .mini-btn.danger { color: #9a3b2e; }
@@ -593,7 +602,8 @@ h2.label { font-weight: 400; }
 /* ---------- 減少動態效果 ---------- */
 @media (prefers-reduced-motion: reduce) {
   .card, .tally.animate i, .tally i.new { animation: none !important; opacity: 1 !important; transform: none !important; }
-  .stamp-grid .seal.stamp-in, .coupon.coupon-in, .sk, .sk-page { animation: none !important; }
+  .stamp-grid .seal.stamp-in, .coupon.coupon-in, .sk, .sk-page, .todo li { animation: none !important; }
+  .check, .check svg path, .todo li { transition: none !important; }
   .sheet, .sticky, .backdrop, .card::before { transition: none !important; }
   .btn.primary .hand-ico { animation: none !important; }
   .btn.primary:active { transform: none; }

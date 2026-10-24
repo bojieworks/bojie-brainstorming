@@ -3,6 +3,7 @@ import { LEVEL } from "@/lib/labels";
 import { relative } from "@/lib/format";
 import { markInterest } from "@/app/admin/projects/actions";
 import { ConfirmButton } from "./confirm-button";
+import { TodoCheck } from "./todo-check";
 
 type Row = Interest & { friend: Friend | null; duplicateName?: boolean };
 
@@ -24,11 +25,7 @@ export function InterestsPanel({ projectId, items }: { projectId: number; items:
             const spam = markInterest.bind(null, projectId, i.id, "spam");
             return (
               <li key={i.id} className={contacted ? "done-row" : undefined}>
-                <form action={toggle}>
-                  <button className="check" type="submit" aria-pressed={contacted} aria-label="已聯絡">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12l5 5L20 7" /></svg>
-                  </button>
-                </form>
+                <TodoCheck action={toggle} pressed={contacted} label="已聯絡" />
                 <div>
                   <span className="who"><b className="person">{i.name}</b><span className={`tag${i.level === "serious" ? " serious" : ""}`}>{LEVEL[i.level]}</span>{i.duplicateName && <span className="tag warn">同名已有一筆</span>}</span>
                   {i.note && <p className="note">「{i.note}」</p>}
