@@ -1,31 +1,29 @@
-import { and, desc, eq, isNull, sql } from "drizzle-orm";
+import { and, desc, eq, isNull, ne, sql } from "drizzle-orm";
 import { db, interests, projects, updates, type NewProject, type Project } from "@/lib/db";
 import { STATUS, type StatusKey } from "@/lib/labels";
 import { newSlug } from "@/lib/slug";
 
 export type ProjectWithCount = Project & { interestCount: number };
 
-const countExpr = sql<number>`(
-  select count(*)::int from ${interests}
-  where ${interests.projectId} = ${projects.id}
-    and ${interests.cancelledAt} is null
-    and ${interests.status} <> 'spam'
-)`;
+// 用 join 而非關聯子查詢：單表查詢時 drizzle 不加表名，子查詢裡的 "id" 會被解析成 interests.id
+const withCount = () =>
+  db
+    .select({ p: projects, interestCount: sql<number>`count(${interests.id})::int` })
+    .from(projects)
+    .leftJoin(
+      interests,
+      and(eq(interests.projectId, projects.id), isNull(interests.cancelledAt), ne(interests.status, "spam")),
+    )
+    .groupBy(projects.id)
+    .$dynamic();
 
 export async function listProjectsAdmin(): Promise<ProjectWithCount[]> {
-  const rows = await db
-    .select({ p: projects, interestCount: countExpr })
-    .from(projects)
-    .orderBy(desc(projects.lastActivityAt));
+  const rows = await withCount().orderBy(desc(projects.lastActivityAt));
   return rows.map((r) => ({ ...r.p, interestCount: r.interestCount }));
 }
 
 export async function listProjectsPublic(): Promise<ProjectWithCount[]> {
-  const rows = await db
-    .select({ p: projects, interestCount: countExpr })
-    .from(projects)
-    .where(eq(projects.published, true))
-    .orderBy(desc(projects.lastActivityAt));
+  const rows = await withCount().where(eq(projects.published, true)).orderBy(desc(projects.lastActivityAt));
   return rows.map((r) => ({ ...r.p, interestCount: r.interestCount }));
 }
 
