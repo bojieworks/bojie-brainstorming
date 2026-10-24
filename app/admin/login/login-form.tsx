@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { login, type LoginState } from "./actions";
+import { FormError } from "@/components/public/form-error";
 
 export function LoginForm({ next }: { next: string }) {
   const [state, action, pending] = useActionState<LoginState, FormData>(login, { message: "" });
@@ -12,7 +13,7 @@ export function LoginForm({ next }: { next: string }) {
         <label htmlFor="password">密碼</label>
         <input className="input" id="password" name="password" type="password" autoComplete="current-password" autoFocus required />
       </div>
-      {state.message && <p className="hint" role="alert" style={{ color: "#9a3b2e" }}>{state.message}</p>}
+      {state.message && <FormError message={state.message} className="hint" />}
       <div>
         <button className="btn primary" type="submit" disabled={pending} style={{ width: "auto" }}>
           {pending ? "進去中…" : "進後台"}

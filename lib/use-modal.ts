@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, type RefObject } from "react";
+import { useEffect, useLayoutEffect, useRef, type RefObject } from "react";
 
 /** Body scroll lock, Esc to close, background made inert, focus moved in and restored on close. */
 export function useModal(open: boolean, ref: RefObject<HTMLElement | null>, onClose: () => void, focusSelector?: string) {
@@ -36,4 +36,20 @@ export function useModal(open: boolean, ref: RefObject<HTMLElement | null>, onCl
       trigger?.focus?.({ preventScroll: true });
     };
   }, [open, ref, onClose, focusSelector]);
+}
+
+/** 視窗內容換頁（表單 → 成功）時，高度從舊的平滑變成新的，手機上 sheet 的上緣才不會瞬間跳一大段。 */
+export function useHeightTransition(ref: RefObject<HTMLElement | null>, key: string) {
+  const prev = useRef(0);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    const from = prev.current;
+    if (!el || !from || getComputedStyle(el).visibility === "hidden") return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const to = el.offsetHeight;
+    if (Math.abs(to - from) < 2) return;
+    el.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: 240, easing: "cubic-bezier(.4,0,.2,1)" });
+  }, [ref, key]);
+  // 每次畫面更新後記下高度，給下一次換頁當起點（要放在上面那個 effect 之後）
+  useLayoutEffect(() => { prev.current = ref.current?.offsetHeight ?? 0; });
 }

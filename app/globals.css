@@ -310,7 +310,17 @@ body.sheet-open { overflow: hidden; }
 .sheet .contact-link { text-align: center; margin: 12px 0 0; font-size: 13px; color: var(--ink-2); }
 .sheet .contact-link .linkish { font-size: 13px; }
 .sheet .cancel-row { text-align: center; margin: 14px 0 0; }
-.sheet .success { text-align: center; padding: 8px 0 0; }
+.sheet .success { text-align: center; padding: 8px 0 0; animation: view-in var(--dur-base) var(--ease-enter) .06s both; }
+@keyframes view-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+/* 展開「留個聯絡方式」：高度從 0 長出來。收起時用 visibility 讓裡面的欄位不能被 Tab 到 */
+.reveal { display: grid; grid-template-rows: 0fr; opacity: 0; visibility: hidden;
+  transition: grid-template-rows var(--dur-base) var(--ease-enter), opacity var(--dur-base), visibility 0s var(--dur-base); }
+.reveal.open { grid-template-rows: 1fr; opacity: 1; visibility: visible; transition: grid-template-rows var(--dur-base) var(--ease-enter), opacity var(--dur-base); }
+/* 裡面多包一層沒有內外距的容器負責裁切；直接裁 .field 的話，它的外距或內距會讓收起時還留 18px */
+.reveal > div { overflow: hidden; min-height: 0; }
+/* 錯誤訊息：紅字淡入、往下 4px */
+.form-err { color: #9a3b2e; animation: err-in var(--dur-fast) var(--ease-out) both; }
+@keyframes err-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 .sheet .success .tally { margin: 6px 0 14px; }
 .sheet .success h2 { font-size: 20px; }
 .sheet .success .names { font-size: 14px; color: var(--ink-2); margin: 0; }
@@ -602,7 +612,8 @@ h2.label { font-weight: 400; }
 /* ---------- 減少動態效果 ---------- */
 @media (prefers-reduced-motion: reduce) {
   .card, .tally.animate i, .tally i.new { animation: none !important; opacity: 1 !important; transform: none !important; }
-  .stamp-grid .seal.stamp-in, .coupon.coupon-in, .sk, .sk-page, .todo li { animation: none !important; }
+  .stamp-grid .seal.stamp-in, .coupon.coupon-in, .sk, .sk-page, .todo li, .sheet .success, .form-err { animation: none !important; }
+  .reveal { transition: none !important; }
   .check, .check svg path, .todo li { transition: none !important; }
   .sheet, .sticky, .backdrop, .card::before { transition: none !important; }
   .btn.primary .hand-ico { animation: none !important; }

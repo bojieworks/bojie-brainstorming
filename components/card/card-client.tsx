@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState, useCallback, useEffect, useRef, useState } from "react";
-import { useModal } from "@/lib/use-modal";
+import { useHeightTransition, useModal } from "@/lib/use-modal";
+import { FormError } from "@/components/public/form-error";
 import { saveMe } from "@/lib/identity";
 import { redeem, type RedeemState } from "@/app/card/[token]/actions";
 import { couponRange } from "@/lib/coupons";
@@ -30,6 +31,7 @@ export function Coupons({ token, coupons, items, toNext, newFrom = Infinity }: {
   const sheetRef = useRef<HTMLDivElement>(null);
   const close = useCallback(() => { setOpen(null); setPicked(false); }, []);
   useModal(open !== null, sheetRef, close, 'input[name="item"]');
+  useHeightTransition(sheetRef, state?.ok ? "ok" : "form");
 
   return (
     <>
@@ -89,7 +91,7 @@ export function Coupons({ token, coupons, items, toNext, newFrom = Infinity }: {
               <div className="actions">
                 <button className="btn primary" type="submit" disabled={!picked || pending}>{pending ? "跟小傑說…" : "跟小傑說"}</button>
               </div>
-              {state && !state.ok && <p className="cta-note" role="alert" style={{ color: "#9a3b2e" }}>{state.message}</p>}
+              {state && !state.ok && <FormError message={state.message} />}
               <p className="cancel-row"><button type="button" className="linkish" onClick={close}>先不換</button></p>
             </form>
           </div>

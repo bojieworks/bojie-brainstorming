@@ -1,11 +1,12 @@
 "use client";
 
 import { createContext, useActionState, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { useModal } from "@/lib/use-modal";
+import { useHeightTransition, useModal } from "@/lib/use-modal";
 import { cancel, join, mine, type JoinState } from "@/app/p/[slug]/actions";
 import { loadMe, saveMe, type Me } from "@/lib/identity";
 import { People } from "./people";
 import { CopyLink } from "./copy-link";
+import { FormError } from "./form-error";
 
 const HandIcon = () => (
   <svg className="hand-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -81,6 +82,7 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
 
   const close = useCallback(() => setOpen(false), []);
   useModal(isOpen, sheetRef, close, me.name ? 'input[name="level"]' : "#name");
+  useHeightTransition(sheetRef, view);
 
   // 之前留過聯絡方式就直接展開，送出時才不會用空白蓋掉
   const open = () => { setView("form"); setShowContact(!!myInterest?.contact); setOpen(true); };
@@ -154,15 +156,19 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
                 <label htmlFor="note">想說什麼 <small>（可以不填）</small></label>
                 <input className="input" id="note" name="note" type="text" placeholder="什麼時候方便、或為什麼想一起" defaultValue={myInterest?.note ?? ""} />
               </div>
-              <div className={`field${showContact ? "" : " hidden"}`}>
-                <label htmlFor="contact">怎麼找你 <small>IG、LINE ID 或 email 都可以</small></label>
-                <input className="input" id="contact" name="contact" type="text" defaultValue={myInterest?.contact ?? ""} />
+              <div className={`reveal${showContact ? " open" : ""}`}>
+                <div>
+                  <div className="field">
+                    <label htmlFor="contact">怎麼找你 <small>IG、LINE ID 或 email 都可以</small></label>
+                    <input className="input" id="contact" name="contact" type="text" defaultValue={myInterest?.contact ?? ""} />
+                  </div>
+                </div>
               </div>
               <label className="toggle"><input type="checkbox" name="showName" defaultChecked={myInterest?.showName ?? false} /><i />讓其他人看到我的名字</label>
               <div className="actions">
                 <button className="btn primary" type="submit" disabled={!canSubmit}>{pending ? "跟小傑說…" : "跟小傑說"}</button>
               </div>
-              {state && !state.ok && <p className="cta-note" role="alert" style={{ color: "#9a3b2e" }}>{state.message}</p>}
+              {state && !state.ok && <FormError message={state.message} />}
               {!showContact && (
                 <p className="contact-link">小傑可能不知道怎麼找你？<button type="button" className="linkish" onClick={() => setShowContact(true)}>留個聯絡方式</button></p>
               )}
