@@ -3,7 +3,7 @@ import { monthDay } from "@/lib/format";
 import { postUpdate, removeUpdate } from "@/app/admin/projects/actions";
 import { PhotoPicker } from "./photo-picker";
 
-export function UpdatesPanel({ projectId, items }: { projectId: number; items: Update[] }) {
+export function UpdatesPanel({ projectId, items, published }: { projectId: number; items: Update[]; published: boolean }) {
   const post = postUpdate.bind(null, projectId);
   return (
     <section className="section" style={{ paddingTop: 0 }}>
@@ -12,8 +12,9 @@ export function UpdatesPanel({ projectId, items }: { projectId: number; items: U
         <textarea className="input" name="body" placeholder="先把 10 月的週末都問一遍，再決定哪三天。" />
         <PhotoPicker name="photo" />
         <div className="send">
-          <button className="btn primary" type="submit">發布</button>
+          <button className="btn primary" type="submit">送出更新</button>
         </div>
+        {!published && <p className="hint">企劃還沒發布，這則更新要等發布後前台才看得到。</p>}
       </form>
       <ul className="timeline" style={{ marginTop: 12 }}>
         {items.map((u) => {

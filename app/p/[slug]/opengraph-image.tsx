@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { getProjectBySlug } from "@/lib/projects";
-import { EFFORT, sizeLabel } from "@/lib/labels";
+import { effortLabel, sizeShort } from "@/lib/labels";
 import { OG_HL, OG_INK, OG_INK2, OG_PAPER, OG_SIZE, fontOption, loadFont } from "@/lib/og";
 
 export const alt = "小傑實驗室";
@@ -13,7 +13,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const p = await getProjectBySlug(slug);
   const title = p?.published ? p.title : "小傑實驗室";
   const tagline = p?.published ? p.tagline : "想做但還沒做的事";
-  const specs = p?.published ? [EFFORT[p.effort], p.timeHint, sizeLabel(p.idealSize)].filter(Boolean).join(" · ") : "";
+  const specs = p?.published ? [effortLabel(p.effort), p.timeHint, sizeShort(p.sizeMin, p.sizeMax)].filter(Boolean).join(" · ") : "";
   const font = await loadFont(`${title}${tagline}${specs}小傑實驗室我也想`);
 
   if (!font) return new Response("font unavailable", { status: 503 });

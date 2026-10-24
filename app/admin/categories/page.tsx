@@ -17,17 +17,20 @@ export default async function CategoriesPage() {
           {items.map((c) => {
             const save = saveCategory.bind(null, c.key);
             const remove = removeCategory.bind(null, c.key);
+            const formId = `cat-${c.key}`;
             return (
               <li key={c.key}>
-                <form action={save} className="cat-row">
+                <form id={formId} action={save} className="cat-row">
                   <input type="color" name="color" defaultValue={c.color} aria-label="顏色" />
                   <input className="input" name="label" defaultValue={c.label} aria-label="名稱" />
                   <span className="st">{c.used > 0 ? `${c.used} 個企劃` : "沒人用"}</span>
-                  <button className="mini-btn" type="submit">儲存</button>
                 </form>
-                <form action={remove}>
-                  <ConfirmButton className="mini-btn danger" message={`刪掉「${c.label}」？`}>刪除</ConfirmButton>
-                </form>
+                <div className="cat-actions">
+                  <button className="mini-btn" type="submit" form={formId}>儲存</button>
+                  <form action={remove}>
+                    <ConfirmButton className="mini-btn danger" message={`刪掉「${c.label}」？`}>刪除</ConfirmButton>
+                  </form>
+                </div>
               </li>
             );
           })}

@@ -2,8 +2,7 @@ import { and, asc, desc, eq, isNull } from "drizzle-orm";
 import { db, friends, interests, redemptions, rewardItems, stamps } from "@/lib/db";
 import { newToken } from "@/lib/slug";
 import { todayISO } from "@/lib/format";
-
-export const STAMPS_PER_COUPON = 3;
+import { couponSummary } from "@/lib/coupons";
 
 export async function listFriends() {
   const rows = await db.query.friends.findMany({ orderBy: asc(friends.name), with: { stamps: true, redemptions: true } });
@@ -41,12 +40,11 @@ export async function friendCard(friendId: number) {
     db.query.redemptions.findMany({ where: eq(redemptions.friendId, friendId), with: { item: true } }),
     db.query.rewardItems.findMany({ where: eq(rewardItems.active, true), orderBy: asc(rewardItems.sort) }),
   ]);
-  const unlocked = Math.floor(stampRows.length / STAMPS_PER_COUPON);
+  const { unlocked, toNext } = couponSummary(stampRows.length);
   const coupons = Array.from({ length: unlocked }, (_, i) => ({
     index: i,
     redemption: redemptionRows.find((r) => r.couponIndex === i) ?? null,
   }));
-  const toNext = STAMPS_PER_COUPON - (stampRows.length % STAMPS_PER_COUPON);
   return { stamps: stampRows, coupons, items, toNext, unlocked };
 }
 

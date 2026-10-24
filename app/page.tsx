@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { listProjectsPublic } from "@/lib/projects";
 import { listCategories } from "@/lib/categories";
 import { yearMonth } from "@/lib/format";
+import { plainText } from "@/lib/rich-text";
 import { ProjectCard } from "@/components/public/project-card";
 import { Chips } from "@/components/public/chips";
 
@@ -72,7 +73,7 @@ export default async function Home(props: PageProps<"/">) {
                   </div>
                   <p className="t">{p.title}</p>
                   <p className="d">{yearMonth(p.endDate ?? p.lastActivityAt)}</p>
-                  {p.retro && <p className="q">{p.retro.split("\n")[0].slice(0, 30)}</p>}
+                  {p.retro && <p className="q">{plainText(p.retro.split("\n")[0]).slice(0, 30)}</p>}
                 </Link>
               ))}
             </div>

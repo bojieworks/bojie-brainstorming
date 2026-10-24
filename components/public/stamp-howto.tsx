@@ -1,3 +1,7 @@
+import { STAMPS_PER_COUPON } from "@/lib/coupons";
+
+const SAMPLE = ["🏔️", "🍜", "🎙️", "🎨", "🚲", "⛺️", "📚", "🎬"];
+
 export function StampHowTo() {
   return (
     <div className="howto" aria-label="集章怎麼玩">
@@ -12,13 +16,13 @@ export function StampHowTo() {
 
       <div className="howto-step">
         <div className="howto-art">
-          <span className="seal howto-seal sm"><span className="e">🏔️</span></span>
-          <span className="seal howto-seal sm"><span className="e">🍜</span></span>
-          <span className="seal howto-seal sm"><span className="e">🎙️</span></span>
+          <span className="howto-seals">
+            {SAMPLE.slice(0, STAMPS_PER_COUPON).map((e) => <span key={e} className="seal howto-seal sm"><span className="e">{e}</span></span>)}
+          </span>
           <span className="howto-arrow">→</span>
           <span className="howto-ticket"><span className="t">小傑券</span></span>
         </div>
-        <p className="howto-cap"><b>集滿 3 章</b>換一張券</p>
+        <p className="howto-cap"><b>集滿 {STAMPS_PER_COUPON} 章</b>換一張券</p>
       </div>
 
       <div className="howto-step">

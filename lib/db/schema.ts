@@ -14,7 +14,6 @@ import {
 import { relations } from "drizzle-orm";
 
 export const statusEnum = pgEnum("status", ["idea", "forming", "active", "done", "parked"]);
-export const effortEnum = pgEnum("effort", ["afternoon", "weekend", "week_plus", "ongoing"]);
 export const levelEnum = pgEnum("interest_level", ["curious", "serious"]);
 export const interestStatusEnum = pgEnum("interest_status", ["new", "contacted", "spam"]);
 export const updateKindEnum = pgEnum("update_kind", ["manual", "system"]);
@@ -52,12 +51,16 @@ export const projects = pgTable(
     category: text("category").notNull().default("life").references(() => categories.key),
     status: statusEnum("status").notNull().default("idea"),
     openToJoin: boolean("open_to_join").notNull().default(true),
-    effort: effortEnum("effort").notNull().default("afternoon"),
+    effort: text("effort").notNull().default("flexible"),
     timeHint: text("time_hint").notNull().default(""),
     startDate: date("start_date"),
     endDate: date("end_date"),
     location: text("location").notNull().default(""),
+    // 舊欄位，已由 sizeMin / sizeMax 取代；先留著讓舊版部署回滾時還讀得到
     idealSize: text("ideal_size"),
+    // 兩個都空 = 不限；相同 = 固定人數；不同 = 區間
+    sizeMin: integer("size_min"),
+    sizeMax: integer("size_max"),
     fitFor: text("fit_for").notNull().default(""),
     coverUrl: text("cover_url"),
     links: jsonb("links").$type<ProjectLink[]>().notNull().default([]),

@@ -1,5 +1,6 @@
 import { listRewardItems } from "@/lib/friends";
-import { addReward, removeReward, seedRewards, toggleReward } from "./actions";
+import { STAMPS_PER_COUPON } from "@/lib/coupons";
+import { addReward, removeReward, toggleReward } from "./actions";
 
 export const metadata = { title: "券菜單" };
 
@@ -10,12 +11,9 @@ export default async function RewardsPage() {
       <h1 className="sr">券菜單</h1>
       <section className="section" style={{ borderTop: 0 }}>
         <p className="label">券菜單 · {items.length}</p>
-        <p className="hint" style={{ margin: "0 0 12px" }}>朋友每集滿 3 章解鎖一張券，可以換這裡任何一項。</p>
+        <p className="hint" style={{ margin: "0 0 12px" }}>朋友每集滿 {STAMPS_PER_COUPON} 章解鎖一張券，可以換這裡任何一項。</p>
         {items.length === 0 ? (
-          <div>
-            <p className="empty-line">還沒有項目。</p>
-            <form action={seedRewards} style={{ marginTop: 10 }}><button className="btn secondary" type="submit" style={{ width: "auto" }}>先放三個預設的</button></form>
-          </div>
+          <p className="empty-line">還沒有項目，從下面新增第一項。</p>
         ) : (
           <ul className="todo">
             {items.map((r) => {

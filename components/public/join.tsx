@@ -65,13 +65,16 @@ export function JoinProvider({ projectId, title, initialCount, initialNames, ope
     if (ctas.length === 0) return;
     const first = ctas[0];
     const state = new Map<Element, IntersectionObserverEntry>();
+    // 頁面上的按鈕完全捲出上方才出現、完全回到畫面裡才收起；中間不變，
+    // 避免在按鈕附近上下捲時底部列一直進出，手指按下去時按鈕剛好滑走
     const io = new IntersectionObserver((entries) => {
       entries.forEach((en) => state.set(en.target, en));
       const f = state.get(first);
       const passedFirst = !!f && !f.isIntersecting && f.boundingClientRect.top < 0;
-      const anyVisible = [...state.values()].some((en) => en.isIntersecting);
-      setStickyVisible(passedFirst && !anyVisible);
-    }, { threshold: 0 });
+      const fullyVisible = [...state.values()].some((en) => en.isIntersecting && en.intersectionRatio >= 0.99);
+      if (passedFirst) setStickyVisible(true);
+      else if (fullyVisible || !f || f.boundingClientRect.top >= 0) setStickyVisible(false);
+    }, { threshold: [0, 1] });
     ctas.forEach((c) => io.observe(c));
     return () => io.disconnect();
   }, []);

@@ -4,6 +4,7 @@ import { useActionState, useCallback, useEffect, useRef, useState } from "react"
 import { useModal } from "@/lib/use-modal";
 import { saveMe } from "@/lib/identity";
 import { redeem, type RedeemState } from "@/app/card/[token]/actions";
+import { couponRange } from "@/lib/coupons";
 
 export function CardIdentity({ name, token }: { name: string; token: string }) {
   useEffect(() => { saveMe({ name, friendToken: token }); }, [name, token]);
@@ -21,26 +22,25 @@ export function Coupons({ token, coupons, items, toNext }: { token: string; coup
   const sheetRef = useRef<HTMLDivElement>(null);
   const close = useCallback(() => { setOpen(null); setPicked(false); }, []);
   useModal(open !== null, sheetRef, close, 'input[name="item"]');
-  const range = (i: number) => `第 ${i * 3 + 1}–${(i + 1) * 3} 章`;
 
   return (
     <>
       {coupons.map((c) => {
         if (c.state === "available") return (
           <div key={c.index} className="coupon">
-            <div><div className="name">小傑券</div><div className="from">{range(c.index)}</div></div>
+            <div><div className="name">小傑券</div><div className="from">{couponRange(c.index)}</div></div>
             <button className="btn primary" onClick={() => { setPicked(false); setOpen(c.index); }}>兌換</button>
           </div>
         );
         if (c.state === "pending") return (
           <div key={c.index} className="coupon pending">
-            <div><div className="name">小傑券 · {c.itemTitle}</div><div className="from">{range(c.index)}</div></div>
+            <div><div className="name">小傑券 · {c.itemTitle}</div><div className="from">{couponRange(c.index)}</div></div>
             <span className="state">等小傑來約</span>
           </div>
         );
         return (
           <div key={c.index} className="coupon used">
-            <div><div className="name">小傑券 · {c.itemTitle}</div><div className="from">{range(c.index)}</div></div>
+            <div><div className="name">小傑券 · {c.itemTitle}</div><div className="from">{couponRange(c.index)}</div></div>
             <span className="state">已兌現 {c.fulfilledAt}</span>
           </div>
         );

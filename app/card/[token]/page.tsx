@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { friendCard, getFriendByToken, STAMPS_PER_COUPON } from "@/lib/friends";
+import { friendCard, getFriendByToken } from "@/lib/friends";
+import { STAMPS_PER_COUPON } from "@/lib/coupons";
 import { monthDay, yearMonth } from "@/lib/format";
 import { CardIdentity, Coupons } from "@/components/card/card-client";
 
@@ -45,7 +46,7 @@ export default async function CardPage(props: PageProps<"/card/[token]">) {
             })}
           </div>
           <p className="hand stamp-note">
-            {total === 0 ? "第一章在等你 ↑" : total % STAMPS_PER_COUPON === 0 ? "剛好集滿一排，有一張新的券 ↓" : `再 ${toNext} 章就有下一張券 ↑`}
+            {total === 0 ? "第一章在等你 ↑" : total % STAMPS_PER_COUPON === 0 ? `剛好集滿 ${STAMPS_PER_COUPON} 章，有一張新的券 ↓` : `再 ${toNext} 章就有下一張券 ↑`}
           </p>
         </section>
 

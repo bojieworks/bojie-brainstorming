@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { friendCard, friendInterests, getFriend } from "@/lib/friends";
+import { STAMPS_PER_COUPON, couponRange } from "@/lib/coupons";
 import { listProjectsAdmin } from "@/lib/projects";
 import { LEVEL } from "@/lib/labels";
 import { monthDay, todayISO, yearMonth } from "@/lib/format";
@@ -21,7 +22,7 @@ export default async function FriendPage(props: PageProps<"/admin/friends/[id]">
   if (!f) notFound();
   const [card, interests, projects] = await Promise.all([friendCard(friendId), friendInterests(friendId), listProjectsAdmin()]);
   const link = `${process.env.SITE_URL ?? ""}/card/${f.token}`;
-  const slots = Math.max(3, Math.ceil(card.stamps.length / 3) * 3);
+  const slots = Math.max(STAMPS_PER_COUPON, Math.ceil(card.stamps.length / STAMPS_PER_COUPON) * STAMPS_PER_COUPON);
   const pending = card.coupons.filter((c) => c.redemption && !c.redemption.fulfilledAt).length;
   const rename = updateFriendName.bind(null, friendId);
   const remove = removeFriend.bind(null, friendId);
@@ -112,7 +113,7 @@ export default async function FriendPage(props: PageProps<"/admin/friends/[id]">
             <p className="label" style={{ paddingTop: 0 }}>券</p>
             {card.coupons.length === 0 && <p className="empty-line">還沒有券。</p>}
             {card.coupons.map((c) => {
-              const from = `第 ${c.index * 3 + 1}–${(c.index + 1) * 3} 章`;
+              const from = couponRange(c.index);
               if (!c.redemption) return <div key={c.index} className="coupon"><div><div className="name">小傑券</div><div className="from">{from} · 還沒用</div></div></div>;
               const r = c.redemption;
               if (!r.fulfilledAt) {

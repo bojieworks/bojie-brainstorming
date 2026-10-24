@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getProjectBySlug, listUpdates } from "@/lib/projects";
 import { countInterests, publicNames } from "@/lib/interests";
-import { EFFORT, sizeLabel } from "@/lib/labels";
+import { effortLabel, sizeLabel } from "@/lib/labels";
+import { RichText, plainText } from "@/lib/rich-text";
 import { monthDay, yearMonth } from "@/lib/format";
 import { StatusStamp } from "@/components/public/status-stamp";
 import { People } from "@/components/public/people";
@@ -14,10 +15,8 @@ export async function generateMetadata(props: PageProps<"/p/[slug]">): Promise<M
   const { slug } = await props.params;
   const p = await getProjectBySlug(slug);
   if (!p || !p.published) return { title: "找不到" };
-  return { title: p.title, description: p.tagline || p.why.slice(0, 80) };
+  return { title: p.title, description: p.tagline || plainText(p.why).slice(0, 80) };
 }
-
-const paragraphs = (t: string) => t.replace(/\r\n/g, "\n").split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean);
 
 function linkLabel(l: { label: string; url: string }) {
   if (l.label && l.label !== l.url && !/^https?:\/\//.test(l.label)) return l.label;
@@ -40,9 +39,9 @@ export default async function ProjectPage(props: PageProps<"/p/[slug]">) {
   const [updates, count, names] = await Promise.all([listUpdates(p.id), countInterests(p.id), publicNames(p.id)]);
   const isDone = p.status === "done";
   const specs = [
-    { k: "投入", v: EFFORT[p.effort] },
+    { k: "投入", v: effortLabel(p.effort) || "還沒定" },
     { k: "時間", v: p.startDate ? `${monthDay(p.startDate)}${p.endDate && p.endDate !== p.startDate ? ` – ${monthDay(p.endDate)}` : ""}` : p.timeHint || "還沒定" },
-    { k: "人數", v: sizeLabel(p.idealSize) || "不限" },
+    { k: "人數", v: sizeLabel(p.sizeMin, p.sizeMax) },
   ];
   const siteUrl = `${process.env.SITE_URL ?? ""}/p/${p.slug}`;
   const shownUpdates = updates;
@@ -82,7 +81,7 @@ export default async function ProjectPage(props: PageProps<"/p/[slug]">) {
   const Why = ({ title }: { title: string }) => p.why ? (
     <section className="block">
       <p className="label">{title}</p>
-      <div className="why">{paragraphs(p.why).map((para, i) => <p key={i}>{para}</p>)}</div>
+      <RichText className="why" text={p.why} />
     </section>
   ) : null;
 
@@ -127,7 +126,7 @@ export default async function ProjectPage(props: PageProps<"/p/[slug]">) {
           {(p.retro || p.wentWith) && (
             <section className="block">
               <p className="label">回顧</p>
-              {p.retro && <div className="why">{paragraphs(p.retro).map((para, i) => <p key={i}>{para}</p>)}</div>}
+              {p.retro && <RichText className="why" text={p.retro} />}
               {p.wentWith && <dl className="kv" style={{ marginTop: 20 }}><dt>一起去的</dt><dd>{p.wentWith}</dd></dl>}
             </section>
           )}

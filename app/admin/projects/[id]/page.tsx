@@ -40,7 +40,7 @@ export default async function EditProjectPage(props: PageProps<"/admin/projects/
       <div className="grid2">
         <ProjectForm project={project} friends={friendOpts} categories={cats} />
         <aside className="side">
-          <UpdatesPanel projectId={projectId} items={updates} />
+          <UpdatesPanel projectId={projectId} items={updates} published={project.published} />
           <InterestsPanel projectId={projectId} items={interests} />
         </aside>
       </div>

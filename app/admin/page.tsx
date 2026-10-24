@@ -6,6 +6,7 @@ import { relative } from "@/lib/format";
 import { markInterest } from "./projects/actions";
 import { ConfirmButton } from "@/components/admin/confirm-button";
 import { listPendingRedemptions } from "@/lib/friends";
+import { couponRange } from "@/lib/coupons";
 import { markFulfilled } from "./friends/actions";
 
 export const metadata = { title: "待辦" };
@@ -77,7 +78,7 @@ export default async function AdminHome() {
                   <div>
                     <span className="who"><b className="person">{r.friend.name}</b></span>
                     <div className="what">想換 <b>{r.item.title}</b></div>
-                    <div className="meta">{relative(r.requestedAt)} · 第 {r.couponIndex * 3 + 1}–{(r.couponIndex + 1) * 3} 章的券 · <Link href={`/admin/friends/${r.friendId}`}>看他的卡</Link></div>
+                    <div className="meta">{relative(r.requestedAt)} · {couponRange(r.couponIndex)}的券 · <Link href={`/admin/friends/${r.friendId}`}>看他的卡</Link></div>
                   </div>
                 </li>
               );
